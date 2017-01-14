@@ -1,0 +1,12 @@
+<xml>
+  <protocol name='RegisterService'>
+    <attr name='internal_key' type='string'/>
+    <attr name='service_type' type='int32'/>
+    <attr name='server_port' type='uint16'/>
+    <attr name='allow_multiple' type='int16'/>
+  </protocol>
+
+  <protocol name='RegisterServiceAck'>
+    <attr name='name' type='string'/>
+  </protocol>
+</xml>

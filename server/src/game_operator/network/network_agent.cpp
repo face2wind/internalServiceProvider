@@ -1,5 +1,6 @@
 #include "network_agent.hpp"
-#include "player/player_manager.hpp"
+#include "game_operator_def.hpp"
+#include "internal_protocol_def.hpp"
 
 #include <iostream>
 
@@ -23,8 +24,13 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::Listening()
 {
-  net_mgr_.SyncListen(52013);
+  net_mgr_.SyncListen(SERVER_GAME_OPERATOR_LISTEN_PORT);
   net_mgr_.WaitAllThread();
+}
+
+void NetworkAgent::ConnectToCenter()
+{
+  net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
 }
 
 void NetworkAgent::SendSerialize(face2wind::NetworkID net_id, const face2wind::SerializeBase &data)
@@ -47,6 +53,25 @@ void NetworkAgent::OnAccept(IPAddr ip, Port port, Port local_port, NetworkID net
   std::cout<<"some one connect : " <<ip<<":"<<port<<", netid("<<net_id<<")"<<std::endl;
 }
 
+void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wind::Port local_port, bool success, face2wind::NetworkID net_id)
+{
+  if (SERVER_CENTER_IP_ADDR == ip && SERVER_CENTER_LISTEN_PORT == port)
+  {
+    if (success)
+    {
+      std::cout<<"connect to center server success!"<<std::endl;
+      Protocol::RegisterService msg;
+      msg.internal_key = "haha_is_me";
+      msg.service_type = 1;
+      msg.server_port = SERVER_GAME_OPERATOR_LISTEN_PORT;
+      msg.allow_multiple = 0;
+      this->SendSerialize(net_id, msg);
+    }
+    else
+      std::cout<<"connect to center server fail!"<<std::endl;
+  }
+}
+
 void NetworkAgent::OnRecv(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
 {
   msg_handler_.OnRecv(net_id, data);
@@ -55,7 +80,7 @@ void NetworkAgent::OnRecv(face2wind::NetworkID net_id, const face2wind::Serializ
 void NetworkAgent::OnDisconnect(NetworkID net_id)
 {
   std::cout<<"some one disconnect : netid("<<net_id<<")"<<std::endl;
-  PlayerManager::GetInstance().OnClientDisconnect(net_id);
+  //PlayerManager::GetInstance().OnClientDisconnect(net_id);
 }
 
   
