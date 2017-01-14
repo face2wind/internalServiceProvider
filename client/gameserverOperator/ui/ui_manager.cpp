@@ -8,7 +8,7 @@
 #include "message_code.hpp"
 #include "network/networkagent.h"
 
-#include "protocol_def.hpp"
+#include "cs_protocol_def.hpp"
 
 using namespace Protocol;
 

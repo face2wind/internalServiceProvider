@@ -1,7 +1,8 @@
 #include "networkagent.h"
 #include "ui/ui_manager.hpp"
+#include "cs_protocol_def.hpp"
 
-NetworkAgent::NetworkAgent() : server_ip_("192.168.11.35"), server_port_(52013), has_connected_(false)
+NetworkAgent::NetworkAgent() : server_ip_("192.168.11.199"), server_port_(52013), has_connected_(false)
 {
     net_mgr_.RegistSerializeHandler(this);
     net_mgr_.SyncConnect(server_ip_, server_port_);
@@ -16,6 +17,8 @@ NetworkAgent & NetworkAgent::GetInstance()
 void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success)
 {
     has_connected_ = true;
+
+    //Protocol::CSCheckServiceInfo
 }
 
 void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)

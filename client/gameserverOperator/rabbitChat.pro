@@ -21,8 +21,8 @@ SOURCES += main.cpp\
     memory/byte_array/queue_byte_array.cpp \
     memory/serialize/serialize_base.cpp \
     memory/serialize/serialize_manager.cpp \
-    ../../common/protocol_def.cpp \
-    ui/mainwindow.cpp
+    ui/mainwindow.cpp \
+    ../../common/cs_protocol_def.cpp
 
 HEADERS  += \
     ui/ui_manager.hpp \
@@ -34,8 +34,8 @@ HEADERS  += \
     memory/serialize/serialize_base.hpp \
     memory/serialize/serialize_manager.hpp \
     ../../common/message_code.hpp \
-    ../../common/protocol_def.hpp \
-    ui/mainwindow.h
+    ui/mainwindow.h \
+    ../../common/cs_protocol_def.hpp
 
 FORMS    += \
     ui/mainwindow.ui

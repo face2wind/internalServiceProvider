@@ -1,5 +1,5 @@
 #include "msg_handler.h"
-#include "protocol_def.hpp"
+#include "cs_protocol_def.hpp"
 #include "ui/ui_manager.hpp"
 #include <QtCore>
 
@@ -28,23 +28,16 @@ void MessageHandler::OnRecv(const face2wind::SerializeBase *data)
 
 void MessageHandler::OnLoginResult(const face2wind::SerializeBase *data)
 {
-    SCLoginResult *msg = (SCLoginResult*)data;
-    qDebug()<<"login result : "<<msg->result;
-    UIManager::GetInstance().OnLoginResult(msg->result);
 }
 
 void MessageHandler::OnFriendListReturn(const face2wind::SerializeBase *data)
 {
-    SCFriendList *msg = (SCFriendList*)data;
-    qDebug()<<"friend list size"<<msg->friend_list.size();
 }
 
 void MessageHandler::OnAllUserListReturn(const face2wind::SerializeBase *data)
 {
-    SCAllUserList *msg = (SCAllUserList*)data;
 }
 
 void MessageHandler::OnReceiveChatMsg(const face2wind::SerializeBase *data)
 {
-    SCChatToUser *msg = (SCChatToUser*)data;
 }

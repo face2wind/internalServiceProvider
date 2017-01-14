@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "ui_chatwindow.h"
+#include "ui_mainwindow.h"
 #include "network/networkagent.h"
 #include <QKeyEvent>
 #include <QStringList>
