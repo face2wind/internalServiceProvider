@@ -3,10 +3,14 @@
     <attr name='service_type' type='int16'/>
   </protocol>
 
-  <protocol name='SCCheckServiceInfoAck'>
+  <protocol name='SCServiceInfoItem'>
     <attr name='service_type' type='int16'/>
     <attr name='ip_addr' type='string'/>
     <attr name='port' type='int16'/>
+  </protocol>
+
+  <protocol name='SCCheckServiceInfoAck'>
+    <attr name='service_list' type='array' subtype='SCServiceInfoItem'/>
   </protocol>
 
   <protocol name='CSGORequestCommandList'>
