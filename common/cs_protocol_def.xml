@@ -14,11 +14,14 @@
 
   <protocol name='SCGOCommandItem'>
     <attr name='project_type' type='int8'/>
-    <attr name='onshow_name' type='string'/>
+    <attr name='project_name' type='string'/>
+    <attr name='operate_type' type='int8'/>
+    <attr name='operate_name' type='string'/>
+    <attr name='operate_describe' type='string'/>
   </protocol>
   
   <protocol name='SCGORequestCommandListACK'>
-    <attr name='command_item' type='array' subtype='SCGOCommandItem'/>
+    <attr name='command_list' type='array' subtype='SCGOCommandItem'/>
   </protocol>
 
   <protocol name='CSGORequestCommand'>

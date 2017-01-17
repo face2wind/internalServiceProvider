@@ -45,7 +45,10 @@ class SCGOCommandItem : public SerializeBase
 {
 public:
   char project_type;
-  std::string onshow_name;
+  std::string project_name;
+  char operate_type;
+  std::string operate_name;
+  std::string operate_describe;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
@@ -55,7 +58,7 @@ public:
 class SCGORequestCommandListACK : public SerializeBase
 {
 public:
-  std::vector<SCGOCommandItem> command_item;
+  std::vector<SCGOCommandItem> command_list;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
