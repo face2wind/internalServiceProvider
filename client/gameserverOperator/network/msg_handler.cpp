@@ -8,8 +8,8 @@ using namespace Protocol;
 
 MessageHandler::MessageHandler()
 {
-    handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::CheckServiceInfoAck;
-    handler_func_map_["SCFriendList"] = &MessageHandler::OnFriendListReturn;
+    handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::OnCheckServiceInfoAck;
+    handler_func_map_["SCGORequestCommandListACK"] = &MessageHandler::OnRequestCommandListACK;
     handler_func_map_["SCAllUserList"] = &MessageHandler::OnAllUserListReturn;
     handler_func_map_["SCChatToUser"] = &MessageHandler::OnReceiveChatMsg;
 }
@@ -27,7 +27,7 @@ void MessageHandler::OnRecv(const face2wind::SerializeBase *data)
         (this->*(func_it_->second))(data);
 }
 
-void MessageHandler::CheckServiceInfoAck(const face2wind::SerializeBase *data)
+void MessageHandler::OnCheckServiceInfoAck(const face2wind::SerializeBase *data)
 {
     NetworkAgent::GetInstance().Disconnect();
 
@@ -35,8 +35,10 @@ void MessageHandler::CheckServiceInfoAck(const face2wind::SerializeBase *data)
     NetworkAgent::GetInstance().ConnectToServer(IPAddr(ack->ip_addr.c_str()), ack->port);
 }
 
-void MessageHandler::OnFriendListReturn(const face2wind::SerializeBase *data)
+void MessageHandler::OnRequestCommandListACK(const face2wind::SerializeBase *data)
 {
+    Protocol::SCGORequestCommandListACK *ack = (Protocol::SCGORequestCommandListACK*)data;
+    ack->command_list
 }
 
 void MessageHandler::OnAllUserListReturn(const face2wind::SerializeBase *data)

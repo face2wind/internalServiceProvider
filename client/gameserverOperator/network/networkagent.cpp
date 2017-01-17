@@ -19,9 +19,17 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
 {
     has_connected_ = true;
 
-    Protocol::CSCheckServiceInfo check_info;
-    check_info.service_type = ServiceType_GAME_OPERATOR;
-    this->SendToServer(check_info);
+    if (ip == SERVER_CENTER_IP_ADDR && port == SERVER_CENTER_LISTEN_PORT)
+    {
+        Protocol::CSCheckServiceInfo check_info;
+        check_info.service_type = ServiceType_GAME_OPERATOR;
+        this->SendToServer(check_info);
+    }
+    else
+    {
+        Protocol::CSGORequestCommandList req_command_list;
+        this->SendToServer(req_command_list);
+    }
 }
 
 void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)

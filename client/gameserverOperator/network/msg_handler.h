@@ -16,8 +16,8 @@ public:
     void OnRecv(const face2wind::SerializeBase *data);
 
 protected:
-    void CheckServiceInfoAck(const face2wind::SerializeBase *data);
-    void OnFriendListReturn(const face2wind::SerializeBase *data);
+    void OnCheckServiceInfoAck(const face2wind::SerializeBase *data);
+    void OnRequestCommandListACK(const face2wind::SerializeBase *data);
     void OnAllUserListReturn(const face2wind::SerializeBase *data);
     void OnReceiveChatMsg(const face2wind::SerializeBase *data);
 
