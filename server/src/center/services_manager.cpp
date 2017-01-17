@@ -17,14 +17,19 @@ void ServicesManager::OnCheckServiceInfo(face2wind::NetworkID net_id, int servic
 {
   std::cout<<"on chesk service info"<<std::endl;
   Protocol::SCCheckServiceInfoAck ack;
-
+  ack.service_type = service_type;
+  ack.ip_addr = "";
+  ack.port = 0;
+  
   for (auto service_item : service_item_map_)
   {
-    Protocol::SCServiceInfoItem s_item;
-    s_item.service_type = service_item.second.server_type;
-    s_item.ip_addr = service_item.second.ip;
-    s_item.port = service_item.second.port;
-    ack.service_list.push_back(s_item);
+    if (service_type == service_item.second.server_type)
+    {
+      ack.service_type = service_item.second.server_type;
+      ack.ip_addr = service_item.second.ip;
+      ack.port = service_item.second.port;
+      break;
+    }
   }
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
 }

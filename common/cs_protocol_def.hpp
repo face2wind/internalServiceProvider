@@ -20,22 +20,12 @@ public:
   virtual const std::string GetTypeName() const { return "CSCheckServiceInfo"; }
 };
 
-class SCServiceInfoItem : public SerializeBase
+class SCCheckServiceInfoAck : public SerializeBase
 {
 public:
   short service_type;
   std::string ip_addr;
   short port;
-
-  virtual void Serialize(ByteArray &collector) const;
-  virtual void Unserialize(ByteArray &collector);
-  virtual const std::string GetTypeName() const { return "SCServiceInfoItem"; }
-};
-
-class SCCheckServiceInfoAck : public SerializeBase
-{
-public:
-  std::vector<SCServiceInfoItem> service_list;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
@@ -103,16 +93,6 @@ public:
 
 protected:
   virtual SerializeBase * CreateSerialize() const { return new CSCheckServiceInfo(); }
-};
-
-class __SCServiceInfoItemDescribe__ : public SerializeDescribe
-{
-public:
-  __SCServiceInfoItemDescribe__() { GetNameToObjectMap()["SCServiceInfoItem"] = this; }
-  virtual ~__SCServiceInfoItemDescribe__() {}
-
-protected:
-  virtual SerializeBase * CreateSerialize() const { return new SCServiceInfoItem(); }
 };
 
 class __SCCheckServiceInfoAckDescribe__ : public SerializeDescribe
