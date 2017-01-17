@@ -3,6 +3,7 @@
 
 #include "memory/serialize/serialize_manager.hpp"
 #include "msg_handler.h"
+#include "client_def.hpp"
 
 class NetworkAgent : public face2wind::ISerializeNetworkHandler
 {
@@ -16,7 +17,8 @@ public:
 
     bool HasConnected() { return has_connected_; }
 
-    void ConnectToServer();
+    void ConnectToServer(IPAddr ip = SERVER_CENTER_IP_ADDR, Port port = SERVER_CENTER_LISTEN_PORT);
+    void Disconnect();
     void SendToServer(const face2wind::SerializeBase &data);
 
 private:

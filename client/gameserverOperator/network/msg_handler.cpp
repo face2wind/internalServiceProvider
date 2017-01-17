@@ -1,13 +1,14 @@
 #include "msg_handler.h"
 #include "cs_protocol_def.hpp"
 #include "ui/ui_manager.hpp"
+#include "networkagent.h"
 #include <QtCore>
 
 using namespace Protocol;
 
 MessageHandler::MessageHandler()
 {
-    handler_func_map_["SCLoginResult"] = &MessageHandler::OnLoginResult;
+    handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::CheckServiceInfoAck;
     handler_func_map_["SCFriendList"] = &MessageHandler::OnFriendListReturn;
     handler_func_map_["SCAllUserList"] = &MessageHandler::OnAllUserListReturn;
     handler_func_map_["SCChatToUser"] = &MessageHandler::OnReceiveChatMsg;
@@ -26,8 +27,12 @@ void MessageHandler::OnRecv(const face2wind::SerializeBase *data)
         (this->*(func_it_->second))(data);
 }
 
-void MessageHandler::OnLoginResult(const face2wind::SerializeBase *data)
+void MessageHandler::CheckServiceInfoAck(const face2wind::SerializeBase *data)
 {
+    NetworkAgent::GetInstance().Disconnect();
+
+    Protocol::SCCheckServiceInfoAck *ack = (Protocol::SCCheckServiceInfoAck*)data;
+    NetworkAgent::GetInstance().ConnectToServer(IPAddr(ack->ip_addr.c_str()), ack->port);
 }
 
 void MessageHandler::OnFriendListReturn(const face2wind::SerializeBase *data)

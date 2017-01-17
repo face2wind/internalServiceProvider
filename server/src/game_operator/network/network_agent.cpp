@@ -1,6 +1,7 @@
 #include "network_agent.hpp"
 #include "game_operator_def.hpp"
 #include "internal_protocol_def.hpp"
+#include "commondef.hpp"
 
 #include <iostream>
 
@@ -62,7 +63,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
       std::cout<<"connect to center server success!"<<std::endl;
       Protocol::RegisterService msg;
       msg.internal_key = "haha_is_me";
-      msg.service_type = 1;
+      msg.service_type = ServiceType_GAME_OPERATOR;
       msg.server_port = SERVER_GAME_OPERATOR_LISTEN_PORT;
       msg.allow_multiple = 0;
       this->SendSerialize(net_id, msg);

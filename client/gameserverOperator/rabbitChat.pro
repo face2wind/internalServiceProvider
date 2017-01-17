@@ -35,7 +35,9 @@ HEADERS  += \
     memory/serialize/serialize_manager.hpp \
     ../../common/message_code.hpp \
     ui/mainwindow.h \
-    ../../common/cs_protocol_def.hpp
+    ../../common/cs_protocol_def.hpp \
+    ../../common/commondef.hpp \
+    client_def.hpp
 
 FORMS    += \
     ui/mainwindow.ui
