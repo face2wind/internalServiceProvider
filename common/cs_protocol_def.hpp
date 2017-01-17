@@ -25,7 +25,7 @@ class SCCheckServiceInfoAck : public SerializeBase
 public:
   short service_type;
   std::string ip_addr;
-  short port;
+  unsigned short port;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);

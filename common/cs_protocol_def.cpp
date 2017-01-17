@@ -25,14 +25,14 @@ void SCCheckServiceInfoAck::Serialize(ByteArray &collector) const
 {
   collector.WriteInt16(service_type);
   collector.WriteString(ip_addr);
-  collector.WriteInt16(port);
+  collector.WriteUint16(port);
 }
 
 void SCCheckServiceInfoAck::Unserialize(ByteArray &collector)
 {
   service_type = collector.ReadInt16();
   ip_addr = collector.ReadString();
-  port = collector.ReadInt16();
+  port = collector.ReadUint16();
 }
 
 void CSGORequestCommandList::Serialize(ByteArray &collector) const
