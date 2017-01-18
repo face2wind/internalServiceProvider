@@ -5,7 +5,8 @@ namespace Protocol {
 __CSCheckServiceInfoDescribe__ for_describe_register_to___cscheckserviceinfodescribe__;
 __SCCheckServiceInfoAckDescribe__ for_describe_register_to___sccheckserviceinfoackdescribe__;
 __CSGORequestCommandListDescribe__ for_describe_register_to___csgorequestcommandlistdescribe__;
-__SCGOCommandItemDescribe__ for_describe_register_to___scgocommanditemdescribe__;
+__SCGOCommandProjectItemDescribe__ for_describe_register_to___scgocommandprojectitemdescribe__;
+__SCGOCommandOperateItemDescribe__ for_describe_register_to___scgocommandoperateitemdescribe__;
 __SCGORequestCommandListACKDescribe__ for_describe_register_to___scgorequestcommandlistackdescribe__;
 __CSGORequestCommandDescribe__ for_describe_register_to___csgorequestcommanddescribe__;
 __SCGORequestCommandAckDescribe__ for_describe_register_to___scgorequestcommandackdescribe__;
@@ -43,19 +44,27 @@ void CSGORequestCommandList::Unserialize(ByteArray &collector)
 {
 }
 
-void SCGOCommandItem::Serialize(ByteArray &collector) const
+void SCGOCommandProjectItem::Serialize(ByteArray &collector) const
 {
   collector.WriteInt8(project_type);
   collector.WriteString(project_name);
+}
+
+void SCGOCommandProjectItem::Unserialize(ByteArray &collector)
+{
+  project_type = collector.ReadInt8();
+  project_name = collector.ReadString();
+}
+
+void SCGOCommandOperateItem::Serialize(ByteArray &collector) const
+{
   collector.WriteInt8(operate_type);
   collector.WriteString(operate_name);
   collector.WriteString(operate_describe);
 }
 
-void SCGOCommandItem::Unserialize(ByteArray &collector)
+void SCGOCommandOperateItem::Unserialize(ByteArray &collector)
 {
-  project_type = collector.ReadInt8();
-  project_name = collector.ReadString();
   operate_type = collector.ReadInt8();
   operate_name = collector.ReadString();
   operate_describe = collector.ReadString();
@@ -63,8 +72,13 @@ void SCGOCommandItem::Unserialize(ByteArray &collector)
 
 void SCGORequestCommandListACK::Serialize(ByteArray &collector) const
 {
-  collector.WriteUint16((unsigned short)command_list.size());
-  for (auto array_item : command_list)
+  collector.WriteUint16((unsigned short)project_list.size());
+  for (auto array_item : project_list)
+  {
+    array_item.Serialize(collector);
+  }
+  collector.WriteUint16((unsigned short)operate_list.size());
+  for (auto array_item : operate_list)
   {
     array_item.Serialize(collector);
   }
@@ -74,11 +88,20 @@ void SCGORequestCommandListACK::Unserialize(ByteArray &collector)
 {
   {
     int array_size = collector.ReadUint16();
-    SCGOCommandItem tmp_attr_value;
+    SCGOCommandProjectItem tmp_attr_value;
     for (int index = 0; index < array_size; ++ index)
     {
       tmp_attr_value.Unserialize(collector);
-      command_list.push_back(tmp_attr_value);
+      project_list.push_back(tmp_attr_value);
+    }
+  }
+  {
+    int array_size = collector.ReadUint16();
+    SCGOCommandOperateItem tmp_attr_value;
+    for (int index = 0; index < array_size; ++ index)
+    {
+      tmp_attr_value.Unserialize(collector);
+      operate_list.push_back(tmp_attr_value);
     }
   }
 }

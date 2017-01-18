@@ -41,24 +41,34 @@ public:
   virtual const std::string GetTypeName() const { return "CSGORequestCommandList"; }
 };
 
-class SCGOCommandItem : public SerializeBase
+class SCGOCommandProjectItem : public SerializeBase
 {
 public:
   char project_type;
   std::string project_name;
+
+  virtual void Serialize(ByteArray &collector) const;
+  virtual void Unserialize(ByteArray &collector);
+  virtual const std::string GetTypeName() const { return "SCGOCommandProjectItem"; }
+};
+
+class SCGOCommandOperateItem : public SerializeBase
+{
+public:
   char operate_type;
   std::string operate_name;
   std::string operate_describe;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
-  virtual const std::string GetTypeName() const { return "SCGOCommandItem"; }
+  virtual const std::string GetTypeName() const { return "SCGOCommandOperateItem"; }
 };
 
 class SCGORequestCommandListACK : public SerializeBase
 {
 public:
-  std::vector<SCGOCommandItem> command_list;
+  std::vector<SCGOCommandProjectItem> project_list;
+  std::vector<SCGOCommandOperateItem> operate_list;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
@@ -118,14 +128,24 @@ protected:
   virtual SerializeBase * CreateSerialize() const { return new CSGORequestCommandList(); }
 };
 
-class __SCGOCommandItemDescribe__ : public SerializeDescribe
+class __SCGOCommandProjectItemDescribe__ : public SerializeDescribe
 {
 public:
-  __SCGOCommandItemDescribe__() { GetNameToObjectMap()["SCGOCommandItem"] = this; }
-  virtual ~__SCGOCommandItemDescribe__() {}
+  __SCGOCommandProjectItemDescribe__() { GetNameToObjectMap()["SCGOCommandProjectItem"] = this; }
+  virtual ~__SCGOCommandProjectItemDescribe__() {}
 
 protected:
-  virtual SerializeBase * CreateSerialize() const { return new SCGOCommandItem(); }
+  virtual SerializeBase * CreateSerialize() const { return new SCGOCommandProjectItem(); }
+};
+
+class __SCGOCommandOperateItemDescribe__ : public SerializeDescribe
+{
+public:
+  __SCGOCommandOperateItemDescribe__() { GetNameToObjectMap()["SCGOCommandOperateItem"] = this; }
+  virtual ~__SCGOCommandOperateItemDescribe__() {}
+
+protected:
+  virtual SerializeBase * CreateSerialize() const { return new SCGOCommandOperateItem(); }
 };
 
 class __SCGORequestCommandListACKDescribe__ : public SerializeDescribe
