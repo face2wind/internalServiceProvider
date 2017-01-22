@@ -45,7 +45,7 @@ void MessageHandler::OnRequestCommandList(face2wind::NetworkID net_id, const fac
     o_item.operate_describe = "Test operate 111";
     ack.operate_list.push_back(o_item);
   }
-  
+  std::cout<<"MessageHandler::OnRequestCommandList"<<std::endl; 
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
 }
 
