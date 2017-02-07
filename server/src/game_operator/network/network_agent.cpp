@@ -7,7 +7,7 @@
 
 using namespace face2wind;
 
-NetworkAgent::NetworkAgent()
+NetworkAgent::NetworkAgent() : center_server_net_id_(0)
 {
   net_mgr_.RegistSerializeHandler(this);
 }
@@ -23,15 +23,11 @@ NetworkAgent & NetworkAgent::GetInstance()
   return instance;
 }
 
-void NetworkAgent::Listening()
-{
-  net_mgr_.SyncListen(SERVER_GAME_OPERATOR_LISTEN_PORT);
-  net_mgr_.WaitAllThread();
-}
-
-void NetworkAgent::ConnectToCenter()
+void NetworkAgent::Running()
 {
   net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
+  net_mgr_.SyncListen(SERVER_GAME_OPERATOR_LISTEN_PORT);
+  net_mgr_.WaitAllThread();
 }
 
 void NetworkAgent::SendSerialize(face2wind::NetworkID net_id, const face2wind::SerializeBase &data)
@@ -60,6 +56,8 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
   {
     if (success)
     {
+      center_server_net_id_ = net_id;
+      
       std::cout<<"connect to center server success!"<<std::endl;
       Protocol::RegisterService msg;
       msg.internal_key = "haha_is_me";
@@ -69,7 +67,12 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
       this->SendSerialize(net_id, msg);
     }
     else
+    {
       std::cout<<"connect to center server fail!"<<std::endl;
+
+      Timer::Sleep(1000);
+      net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
+    }
   }
 }
 
@@ -81,7 +84,12 @@ void NetworkAgent::OnRecv(face2wind::NetworkID net_id, const face2wind::Serializ
 void NetworkAgent::OnDisconnect(NetworkID net_id)
 {
   std::cout<<"some one disconnect : netid("<<net_id<<")"<<std::endl;
-  //PlayerManager::GetInstance().OnClientDisconnect(net_id);
+
+  if (center_server_net_id_ == net_id)
+  {
+    Timer::Sleep(1000);
+    net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
+  }
 }
 
   

@@ -12,8 +12,7 @@ public:
   
   ~NetworkAgent();
   
-  void Listening();
-  void ConnectToCenter();
+  void Running();
   void SendSerialize(face2wind::NetworkID net_id, const face2wind::SerializeBase &data);
   void Disconnect(face2wind::NetworkID net_id);
 
@@ -31,4 +30,6 @@ private:
   face2wind::SerializeNetworkManager net_mgr_;
 
   MessageHandler msg_handler_;
+
+  face2wind::NetworkID center_server_net_id_;
 };

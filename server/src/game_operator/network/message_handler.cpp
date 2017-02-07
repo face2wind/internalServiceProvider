@@ -1,17 +1,20 @@
 #include "message_handler.hpp"
 #include "cs_protocol_def.hpp"
 #include "network_agent.hpp"
+#include "operate_manager.hpp"
 
 using namespace Protocol;
 
 MessageHandler::MessageHandler()
 {
+  op_mgr = new OperateManager();
+  
   handler_func_map_["CSGORequestCommandList"] = &MessageHandler::OnRequestCommandList;
 }
 
 MessageHandler::~MessageHandler()
 {
-
+  delete op_mgr;
 }
 
 void MessageHandler::OnRecv(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
@@ -29,23 +32,6 @@ void MessageHandler::OnRecv(face2wind::NetworkID net_id, const face2wind::Serial
 
 void MessageHandler::OnRequestCommandList(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
 {
-  SCGORequestCommandListACK ack;
-
-  {
-    SCGOCommandProjectItem p_item;
-    p_item.project_type = 1;
-    p_item.project_name = "Project1";
-    ack.project_list.push_back(p_item);
-  }
-
-  {
-    SCGOCommandOperateItem o_item;
-    o_item.operate_type = 1;
-    o_item.operate_name = "Operate1";
-    o_item.operate_describe = "Test operate 111";
-    ack.operate_list.push_back(o_item);
-  }
-  std::cout<<"MessageHandler::OnRequestCommandList"<<std::endl; 
-  NetworkAgent::GetInstance().SendSerialize(net_id, ack);
+  op_mgr->OnRequestCommandList(net_id);
 }
 
