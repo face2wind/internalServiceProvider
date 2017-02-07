@@ -61,7 +61,7 @@ void NetworkManager::Disconnect()
 void NetworkManager::OnConnect()
 {
     //IPAddr remote_ip, Port remote_port, Port local_port
-    qDebug()<<"<<<< has connect <<<<<<<<<";
+    qDebug()<<" has connect to "<<this->peerAddress()<<":"<<this->peerPort();
 
     for (INetworkHandler *handler : handler_set_)
     {

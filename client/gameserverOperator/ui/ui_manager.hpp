@@ -12,6 +12,8 @@ public:
     ~UIManager();
     static UIManager & GetInstance();
 
+    MainWindow *GetMainView() { return main_window_; }
+
     void ShowLogin();
     void ShowRegister();
     void ShowMainView();

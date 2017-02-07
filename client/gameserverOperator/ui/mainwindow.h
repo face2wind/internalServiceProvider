@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <deque>
+#include "cs_protocol_def.hpp"
 
 namespace Ui {
 class ChatWindow;
@@ -23,7 +24,7 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-    void SetData();
+    void SetOperateData(Protocol::SCGORequestCommandListACK *ack);
 
 protected:
 

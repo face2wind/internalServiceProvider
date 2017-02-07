@@ -16,11 +16,17 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::SetData()
+void MainWindow::SetOperateData(Protocol::SCGORequestCommandListACK *ack)
 {
-    QStringList str_list;
-    str_list<<"天天爱仙侠"<<"灵域修真"<<"mg22";
-    ui->project_name->addItems(str_list);
+    QStringList name_str_list;
+    for (Protocol::SCGOCommandProjectItem item : ack->project_list)
+        name_str_list<<item.project_name.c_str();
+    ui->project_name->addItems(name_str_list);
+
+    QStringList opera_str_list;
+    for (Protocol::SCGOCommandOperateItem item : ack->operate_list)
+        opera_str_list<<item.operate_name.c_str();
+    ui->operate_type->addItems(opera_str_list);
 }
 
 void MainWindow::on_execute_btn_clicked()

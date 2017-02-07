@@ -3,6 +3,7 @@
 #include "ui/ui_manager.hpp"
 #include "networkagent.h"
 #include <QtCore>
+#include "ui/mainwindow.h"
 
 using namespace Protocol;
 
@@ -38,7 +39,7 @@ void MessageHandler::OnCheckServiceInfoAck(const face2wind::SerializeBase *data)
 void MessageHandler::OnRequestCommandListACK(const face2wind::SerializeBase *data)
 {
     Protocol::SCGORequestCommandListACK *ack = (Protocol::SCGORequestCommandListACK*)data;
-    ack->command_list
+    UIManager::GetInstance().GetMainView()->SetOperateData(ack);
 }
 
 void MessageHandler::OnAllUserListReturn(const face2wind::SerializeBase *data)

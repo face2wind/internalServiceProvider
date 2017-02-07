@@ -47,7 +47,6 @@ void UIManager::ShowRegister()
 
 void UIManager::ShowMainView()
 {
-    main_window_->SetData();
     main_window_->show();
 }
 

@@ -27,6 +27,7 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
     }
     else
     {
+        qDebug()<<"connect to game server ";
         Protocol::CSGORequestCommandList req_command_list;
         this->SendToServer(req_command_list);
     }
