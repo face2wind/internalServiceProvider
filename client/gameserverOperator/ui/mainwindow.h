@@ -26,15 +26,14 @@ public:
 
     void SetOperateData(Protocol::SCGORequestCommandListACK *ack);
 
-protected:
-
-private:
-
 private slots:
     void on_execute_btn_clicked();
 
 private:
     Ui::ChatWindow *ui;
+
+    std::vector<Protocol::SCGOCommandProjectItem> project_list_;
+    std::vector<Protocol::SCGOCommandOperateItem> operate_list_;
 };
 
 #endif // CHATWINDOW_H
