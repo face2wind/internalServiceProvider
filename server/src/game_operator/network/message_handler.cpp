@@ -10,6 +10,7 @@ MessageHandler::MessageHandler()
   op_mgr = new OperateManager();
   
   handler_func_map_["CSGORequestCommandList"] = &MessageHandler::OnRequestCommandList;
+  handler_func_map_["CSGORequestCommand"] = &MessageHandler::OnRequestCommand;
 }
 
 MessageHandler::~MessageHandler()
@@ -34,4 +35,11 @@ void MessageHandler::OnRequestCommandList(face2wind::NetworkID net_id, const fac
 {
   op_mgr->OnRequestCommandList(net_id);
 }
+
+void MessageHandler::OnRequestCommand(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
+{
+  CSGORequestCommand *cmd = (CSGORequestCommand*)data;
+  op_mgr->OnRequestCommand(net_id, cmd->project_type, cmd->operate_type);
+}
+
 

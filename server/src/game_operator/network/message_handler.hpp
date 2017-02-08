@@ -18,7 +18,8 @@ class MessageHandler
   
  protected:
   void OnRequestCommandList(face2wind::NetworkID net_id, const face2wind::SerializeBase *data);
-
+  void OnRequestCommand(face2wind::NetworkID net_id, const face2wind::SerializeBase *data);
+  
  private:
   std::map<std::string, MessageHandlerFunc> handler_func_map_;
 
