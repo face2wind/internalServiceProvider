@@ -29,6 +29,10 @@ public:
 private slots:
     void on_execute_btn_clicked();
 
+    void on_project_name_currentIndexChanged(int index);
+
+    void on_operate_type_currentIndexChanged(int index);
+
 private:
     Ui::ChatWindow *ui;
 
