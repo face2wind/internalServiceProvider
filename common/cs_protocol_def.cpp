@@ -10,6 +10,7 @@ __SCGOCommandOperateItemDescribe__ for_describe_register_to___scgocommandoperate
 __SCGORequestCommandListACKDescribe__ for_describe_register_to___scgorequestcommandlistackdescribe__;
 __CSGORequestCommandDescribe__ for_describe_register_to___csgorequestcommanddescribe__;
 __SCGORequestCommandAckDescribe__ for_describe_register_to___scgorequestcommandackdescribe__;
+__SCGORequestCommandOutputDescribe__ for_describe_register_to___scgorequestcommandoutputdescribe__;
 
 
 void CSCheckServiceInfo::Serialize(ByteArray &collector) const
@@ -122,14 +123,36 @@ void SCGORequestCommandAck::Serialize(ByteArray &collector) const
 {
   collector.WriteInt8(project_type);
   collector.WriteInt8(operate_type);
-  collector.WriteInt32(operate_result);
+  collector.WriteInt8(operate_result);
 }
 
 void SCGORequestCommandAck::Unserialize(ByteArray &collector)
 {
   project_type = collector.ReadInt8();
   operate_type = collector.ReadInt8();
-  operate_result = collector.ReadInt32();
+  operate_result = collector.ReadInt8();
+}
+
+void SCGORequestCommandOutput::Serialize(ByteArray &collector) const
+{
+  collector.WriteUint16((unsigned short)output_str_list.size());
+  for (auto array_item : output_str_list)
+  {
+    collector.WriteString(array_item);
+  }
+}
+
+void SCGORequestCommandOutput::Unserialize(ByteArray &collector)
+{
+  {
+    int array_size = collector.ReadUint16();
+    std::string tmp_attr_value;
+    for (int index = 0; index < array_size; ++ index)
+    {
+      collector.WriteString(tmp_attr_value);
+      output_str_list.push_back(tmp_attr_value);
+    }
+  }
 }
 
 }

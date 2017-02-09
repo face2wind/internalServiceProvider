@@ -36,7 +36,11 @@
   <protocol name='SCGORequestCommandAck'>
     <attr name='project_type' type='int8'/>
     <attr name='operate_type' type='int8'/>
-    <attr name='operate_result' type='int32'/>
+    <attr name='operate_result' type='int8'/>
+  </protocol>
+
+  <protocol name='SCGOCommandOutput'>
+    <attr name='output_str_list' type='array' subtype='string'/>
   </protocol>
   
 </xml>

@@ -91,11 +91,21 @@ class SCGORequestCommandAck : public SerializeBase
 public:
   char project_type;
   char operate_type;
-  int operate_result;
+  char operate_result;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
   virtual const std::string GetTypeName() const { return "SCGORequestCommandAck"; }
+};
+
+class SCGORequestCommandOutput : public SerializeBase
+{
+public:
+  std::vector<std::string> output_str_list;
+
+  virtual void Serialize(ByteArray &collector) const;
+  virtual void Unserialize(ByteArray &collector);
+  virtual const std::string GetTypeName() const { return "SCGORequestCommandOutput"; }
 };
 
 class __CSCheckServiceInfoDescribe__ : public SerializeDescribe
@@ -176,6 +186,16 @@ public:
 
 protected:
   virtual SerializeBase * CreateSerialize() const { return new SCGORequestCommandAck(); }
+};
+
+class __SCGORequestCommandOutputDescribe__ : public SerializeDescribe
+{
+public:
+  __SCGORequestCommandOutputDescribe__() { GetNameToObjectMap()["SCGORequestCommandOutput"] = this; }
+  virtual ~__SCGORequestCommandOutputDescribe__() {}
+
+protected:
+  virtual SerializeBase * CreateSerialize() const { return new SCGORequestCommandOutput(); }
 };
 
 
