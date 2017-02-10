@@ -111,13 +111,13 @@ void NetworkManager::OnRecv()
 
 void NetworkManager::OnDisconnect()
 {
+    this->abort();
+    this->close();
+
     for (INetworkHandler *handler : handler_set_)
     {
         handler->OnDisconnect();
     }
-
-    this->abort();
-    this->close();
 }
 
 void NetworkManager::OnRecvPackage(char *data, int length)

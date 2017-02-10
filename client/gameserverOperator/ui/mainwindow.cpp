@@ -37,6 +37,12 @@ void MainWindow::SetOperateData(Protocol::SCGORequestCommandListACK *ack)
     operate_list_ = ack->operate_list;
 }
 
+void MainWindow::AddOutputTxt(Protocol::SCGOCommandOutput*ack)
+{
+    for (std::string output_txt : ack->output_str_list)
+        ui->output_msg_txt->append(output_txt.c_str());
+}
+
 void MainWindow::on_execute_btn_clicked()
 {
     int project_index = ui->project_name->currentIndex();

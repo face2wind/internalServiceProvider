@@ -25,6 +25,7 @@ public:
     ~MainWindow();
 
     void SetOperateData(Protocol::SCGORequestCommandListACK *ack);
+    void AddOutputTxt(Protocol::SCGOCommandOutput*ack);
 
 private slots:
     void on_execute_btn_clicked();

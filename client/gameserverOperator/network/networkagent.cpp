@@ -2,6 +2,7 @@
 #include "ui/ui_manager.hpp"
 #include "cs_protocol_def.hpp"
 #include "commondef.hpp"
+#include "windows.h"
 
 NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), has_connected_(false)
 {
@@ -41,22 +42,22 @@ void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)
 void NetworkAgent::OnDisconnect()
 {
     has_connected_ = false;
-    UIManager::GetInstance().ShowLogin();
+
+    if (server_ip_ == SERVER_CENTER_IP_ADDR && server_port_ == SERVER_CENTER_LISTEN_PORT)
+        return;
+
+    Sleep(1000);
     this->ConnectToServer();
 }
 
 void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
 {
-    if (0 == port)
+    if (0 != port)
     {
-        net_mgr_.SyncConnect(server_ip_, server_port_);
-    }
-    else
-    {
-        net_mgr_.SyncConnect(ip, port);
         server_ip_ = ip;
         server_port_ = port;
     }
+    net_mgr_.SyncConnect(server_ip_, server_port_);
 }
 
 void NetworkAgent::Disconnect()

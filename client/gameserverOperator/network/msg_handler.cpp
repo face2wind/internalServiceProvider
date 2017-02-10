@@ -11,7 +11,7 @@ MessageHandler::MessageHandler()
 {
     handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::OnCheckServiceInfoAck;
     handler_func_map_["SCGORequestCommandListACK"] = &MessageHandler::OnRequestCommandListACK;
-    handler_func_map_["SCAllUserList"] = &MessageHandler::OnAllUserListReturn;
+    handler_func_map_["SCGOCommandOutput"] = &MessageHandler::OnCommandOutput;
     handler_func_map_["SCChatToUser"] = &MessageHandler::OnReceiveChatMsg;
 }
 
@@ -42,8 +42,10 @@ void MessageHandler::OnRequestCommandListACK(const face2wind::SerializeBase *dat
     UIManager::GetInstance().GetMainView()->SetOperateData(ack);
 }
 
-void MessageHandler::OnAllUserListReturn(const face2wind::SerializeBase *data)
+void MessageHandler::OnCommandOutput(const face2wind::SerializeBase *data)
 {
+    Protocol::SCGOCommandOutput *output = (Protocol::SCGOCommandOutput *)data;
+    UIManager::GetInstance().GetMainView()->AddOutputTxt(output);
 }
 
 void MessageHandler::OnReceiveChatMsg(const face2wind::SerializeBase *data)
