@@ -10,7 +10,7 @@ __SCGOCommandOperateItemDescribe__ for_describe_register_to___scgocommandoperate
 __SCGORequestCommandListACKDescribe__ for_describe_register_to___scgorequestcommandlistackdescribe__;
 __CSGORequestCommandDescribe__ for_describe_register_to___csgorequestcommanddescribe__;
 __SCGORequestCommandAckDescribe__ for_describe_register_to___scgorequestcommandackdescribe__;
-__SCGORequestCommandOutputDescribe__ for_describe_register_to___scgorequestcommandoutputdescribe__;
+__SCGOCommandOutputDescribe__ for_describe_register_to___scgocommandoutputdescribe__;
 
 
 void CSCheckServiceInfo::Serialize(ByteArray &collector) const
@@ -133,7 +133,7 @@ void SCGORequestCommandAck::Unserialize(ByteArray &collector)
   operate_result = collector.ReadInt8();
 }
 
-void SCGORequestCommandOutput::Serialize(ByteArray &collector) const
+void SCGOCommandOutput::Serialize(ByteArray &collector) const
 {
   collector.WriteUint16((unsigned short)output_str_list.size());
   for (auto array_item : output_str_list)
@@ -142,7 +142,7 @@ void SCGORequestCommandOutput::Serialize(ByteArray &collector) const
   }
 }
 
-void SCGORequestCommandOutput::Unserialize(ByteArray &collector)
+void SCGOCommandOutput::Unserialize(ByteArray &collector)
 {
   {
     int array_size = collector.ReadUint16();

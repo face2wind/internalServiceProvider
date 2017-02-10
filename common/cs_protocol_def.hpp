@@ -98,14 +98,14 @@ public:
   virtual const std::string GetTypeName() const { return "SCGORequestCommandAck"; }
 };
 
-class SCGORequestCommandOutput : public SerializeBase
+class SCGOCommandOutput : public SerializeBase
 {
 public:
   std::vector<std::string> output_str_list;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);
-  virtual const std::string GetTypeName() const { return "SCGORequestCommandOutput"; }
+  virtual const std::string GetTypeName() const { return "SCGOCommandOutput"; }
 };
 
 class __CSCheckServiceInfoDescribe__ : public SerializeDescribe
@@ -188,14 +188,14 @@ protected:
   virtual SerializeBase * CreateSerialize() const { return new SCGORequestCommandAck(); }
 };
 
-class __SCGORequestCommandOutputDescribe__ : public SerializeDescribe
+class __SCGOCommandOutputDescribe__ : public SerializeDescribe
 {
 public:
-  __SCGORequestCommandOutputDescribe__() { GetNameToObjectMap()["SCGORequestCommandOutput"] = this; }
-  virtual ~__SCGORequestCommandOutputDescribe__() {}
+  __SCGOCommandOutputDescribe__() { GetNameToObjectMap()["SCGOCommandOutput"] = this; }
+  virtual ~__SCGOCommandOutputDescribe__() {}
 
 protected:
-  virtual SerializeBase * CreateSerialize() const { return new SCGORequestCommandOutput(); }
+  virtual SerializeBase * CreateSerialize() const { return new SCGOCommandOutput(); }
 };
 
 
