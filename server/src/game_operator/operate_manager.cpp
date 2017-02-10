@@ -97,19 +97,21 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
   std::string cmd_str = std::string("dev_tool.sh ") + project_list_[project_type].cmd_name + " " + operate_list_[operate_type].cmd_name;
   cout << cmd_str << endl;
 
-  cmd_str = "ls";
+  //cmd_str = "ls && sleep 3 && ls";
   FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
     return;
 
-  char tmp[1024]; //设置一个合适的长度，以存储每一行输出
+  SCGOCommandOutput output_msg;
+  char tmp[1024];
   while (fgets(tmp, sizeof(tmp), pp) != NULL)
   {
-    if (tmp[strlen(tmp) - 1] == '\n') {
-      tmp[strlen(tmp) - 1] = '\0'; //去除换行符
-    }
-    cout << tmp << endl;
-    //resvec.push_back(tmp);
+    if (tmp[strlen(tmp) - 1] == '\n')
+      tmp[strlen(tmp) - 1] = '\0';
+    tmp[strlen(tmp)] = '\0';
+    output_msg.output_str_list.clear();
+    output_msg.output_str_list.push_back(std::string(tmp));
+    NetworkAgent::GetInstance().SendSerialize(net_id, output_msg);  
   }
   pclose(pp);
 }

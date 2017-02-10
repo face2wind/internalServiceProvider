@@ -149,7 +149,7 @@ void SCGOCommandOutput::Unserialize(ByteArray &collector)
     std::string tmp_attr_value;
     for (int index = 0; index < array_size; ++ index)
     {
-      collector.WriteString(tmp_attr_value);
+      tmp_attr_value = collector.ReadString();
       output_str_list.push_back(tmp_attr_value);
     }
   }
