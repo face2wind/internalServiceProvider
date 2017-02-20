@@ -4,6 +4,7 @@
 #include "networkagent.h"
 #include <QtCore>
 #include "ui/mainwindow.h"
+#include "commondef.hpp"
 
 using namespace Protocol;
 
@@ -12,7 +13,7 @@ MessageHandler::MessageHandler()
     handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::OnCheckServiceInfoAck;
     handler_func_map_["SCGORequestCommandListACK"] = &MessageHandler::OnRequestCommandListACK;
     handler_func_map_["SCGOCommandOutput"] = &MessageHandler::OnCommandOutput;
-    handler_func_map_["SCChatToUser"] = &MessageHandler::OnReceiveChatMsg;
+    handler_func_map_["SCGORequestCommandAck"] = &MessageHandler::OnCommandAck;
 }
 
 MessageHandler::~MessageHandler()
@@ -33,6 +34,12 @@ void MessageHandler::OnCheckServiceInfoAck(const face2wind::SerializeBase *data)
     NetworkAgent::GetInstance().Disconnect();
 
     Protocol::SCCheckServiceInfoAck *ack = (Protocol::SCCheckServiceInfoAck*)data;
+    if (0 == ack->port)
+    {
+        qDebug()<<"MessageHandler::OnCheckServiceInfoAck receive port == 0";
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("游戏操作服务器未启动，请联系服务端！");
+        return;
+    }
     NetworkAgent::GetInstance().ConnectToServer(IPAddr(ack->ip_addr.c_str()), ack->port);
 }
 
@@ -48,6 +55,16 @@ void MessageHandler::OnCommandOutput(const face2wind::SerializeBase *data)
     UIManager::GetInstance().GetMainView()->AddOutputTxt(output);
 }
 
-void MessageHandler::OnReceiveChatMsg(const face2wind::SerializeBase *data)
+void MessageHandler::OnCommandAck(const face2wind::SerializeBase *data)
 {
+    Protocol::SCGORequestCommandAck *cmd_ack = (Protocol::SCGORequestCommandAck *)data;
+
+    if (OperateResultType_SUCC == cmd_ack->operate_result)
+    {
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("操作执行完毕！");
+    }
+    else if (OperateResultType_CANNOT_GET_LOCK == cmd_ack->operate_result)
+    {
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("您还有一个操作请求未执行完毕，请稍等！");
+    }
 }

@@ -19,7 +19,7 @@ protected:
     void OnCheckServiceInfoAck(const face2wind::SerializeBase *data);
     void OnRequestCommandListACK(const face2wind::SerializeBase *data);
     void OnCommandOutput(const face2wind::SerializeBase *data);
-    void OnReceiveChatMsg(const face2wind::SerializeBase *data);
+    void OnCommandAck(const face2wind::SerializeBase *data);
 
 private:
     std::map<std::string, MessageHandlerFunc> handler_func_map_;

@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     this->setFixedWidth(210);
-    this->setFixedHeight(330);
+    this->setFixedHeight(360);
 }
 
 MainWindow::~MainWindow()
@@ -43,12 +43,20 @@ void MainWindow::AddOutputTxt(Protocol::SCGOCommandOutput*ack)
         ui->output_msg_txt->append(output_txt.c_str());
 }
 
+void MainWindow::SetTipsTxt(const QString &tips_str)
+{
+    ui->tips_txt->setText(tips_str);
+}
+
 void MainWindow::on_execute_btn_clicked()
 {
     int project_index = ui->project_name->currentIndex();
     int operate_index = ui->operate_type->currentIndex();
-    if (project_index >= (int)project_list_.size() || operate_index >= (int)operate_list_.size())
+    if (project_index <= 0 || project_index >= (int)project_list_.size() || operate_index <= 0 || operate_index >= (int)operate_list_.size())
+    {
+        //this->SetTipsTxt("请先");
         return;
+    }
 
     Protocol::CSGORequestCommand cmd;
     cmd.project_type = project_list_[project_index].project_type;

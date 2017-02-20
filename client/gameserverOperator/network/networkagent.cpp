@@ -3,6 +3,7 @@
 #include "cs_protocol_def.hpp"
 #include "commondef.hpp"
 #include "windows.h"
+#include "ui/mainwindow.h"
 
 NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), has_connected_(false)
 {
@@ -44,9 +45,14 @@ void NetworkAgent::OnDisconnect()
     has_connected_ = false;
 
     if (server_ip_ == SERVER_CENTER_IP_ADDR && server_port_ == SERVER_CENTER_LISTEN_PORT)
+    {
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("与中央服务器断开，开始连接操作服务器！");
         return;
+    }
 
+    UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，准备重连！");
     Sleep(1000);
+
     this->ConnectToServer();
 }
 
