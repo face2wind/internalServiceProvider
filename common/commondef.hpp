@@ -7,5 +7,6 @@ enum ServiceType
 
 enum OperateResultType
 {
-  OperateResultType_SUCC = 0
+  OperateResultType_SUCC = 0,
+  OperateResultType_CANNOT_GET_LOCK
 };

@@ -1,5 +1,6 @@
 #include "operate_manager.hpp"
 #include "network/network_agent.hpp"
+#include "commondef.hpp"
 
 #include <iostream>
 //#include <fiostream.h>
@@ -93,10 +94,22 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
     cout <<"project_type or operate_type invalid"<< endl;
     return;
   }
-  
-  std::string cmd_str = std::string("dev_tool.sh ") + project_list_[project_type].cmd_name + " " + operate_list_[operate_type].cmd_name;
-  cout << cmd_str << endl;
 
+  std::string cmd_str = std::string("dev_tool.sh ") + project_list_[project_type].cmd_name + " " + operate_list_[operate_type].cmd_name;
+  
+  SCGORequestCommandAck ack;
+  ack.project_type = project_type;
+  ack.operate_type = operate_type;
+
+  if (!this->CommandLock(cmd_str))
+  {
+    ack.operate_result = OperateResultType_CANNOT_GET_LOCK;
+    NetworkAgent::GetInstance().SendSerialize(net_id, ack);
+    return;
+  }
+
+  cout << cmd_str << endl;
+      
   //cmd_str = "ls && sleep 3 && ls";
   FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
@@ -114,5 +127,32 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
     NetworkAgent::GetInstance().SendSerialize(net_id, output_msg);  
   }
   pclose(pp);
+
+  ack.operate_result = OperateResultType_SUCC;
+  NetworkAgent::GetInstance().SendSerialize(net_id, ack);
+
+  this->CommandUnlock(cmd_str);
 }
 
+bool OperateManager::CommandLock(const std::string &cmd_str)
+{
+  on_operating_cmd_mutex_.Lock();
+  
+  if (on_operating_cmd_set_.find(cmd_str) != on_operating_cmd_set_.end())
+    return false;
+  
+  on_operating_cmd_mutex_.Unlock();
+  
+  return true;
+}
+
+bool OperateManager::CommandUnlock(const std::string &cmd_str)
+{
+  on_operating_cmd_mutex_.Lock();
+  
+  on_operating_cmd_set_.erase(cmd_str);
+  
+  on_operating_cmd_mutex_.Unlock();
+
+  return true;
+}
