@@ -22,7 +22,7 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::Listening()
 {
-  net_mgr_.SyncListen(52013);
+  net_mgr_.SyncListen(52023);
   net_mgr_.WaitAllThread();
 }
 
