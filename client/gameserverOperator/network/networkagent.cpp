@@ -23,13 +23,16 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
 
     if (ip == SERVER_CENTER_IP_ADDR && port == SERVER_CENTER_LISTEN_PORT)
     {
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("连接中央服务器成功，查询操作服务器IP端口！");
+
         Protocol::CSCheckServiceInfo check_info;
         check_info.service_type = ServiceType_GAME_OPERATOR;
         this->SendToServer(check_info);
     }
     else
     {
-        qDebug()<<"connect to game server ";
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("连接操作服务器成功，查询游戏列表！");
+
         Protocol::CSGORequestCommandList req_command_list;
         this->SendToServer(req_command_list);
     }

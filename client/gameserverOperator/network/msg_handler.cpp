@@ -47,6 +47,8 @@ void MessageHandler::OnRequestCommandListACK(const face2wind::SerializeBase *dat
 {
     Protocol::SCGORequestCommandListACK *ack = (Protocol::SCGORequestCommandListACK*)data;
     UIManager::GetInstance().GetMainView()->SetOperateData(ack);
+
+    UIManager::GetInstance().GetMainView()->SetTipsTxt("游戏列表信息正确获取，请选择操作！");
 }
 
 void MessageHandler::OnCommandOutput(const face2wind::SerializeBase *data)

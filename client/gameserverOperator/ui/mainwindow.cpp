@@ -9,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::ChatWindow)
 {
     ui->setupUi(this);
-    this->setFixedWidth(210);
+   // this->setFixedWidth(210);
+    this->setFixedWidth(760);
     this->setFixedHeight(360);
 }
 
@@ -52,7 +53,7 @@ void MainWindow::on_execute_btn_clicked()
 {
     int project_index = ui->project_name->currentIndex();
     int operate_index = ui->operate_type->currentIndex();
-    if (project_index <= 0 || project_index >= (int)project_list_.size() || operate_index <= 0 || operate_index >= (int)operate_list_.size())
+    if (project_index < 0 || project_index >= (int)project_list_.size() || operate_index < 0 || operate_index >= (int)operate_list_.size())
     {
         //this->SetTipsTxt("请先");
         return;
@@ -63,7 +64,9 @@ void MainWindow::on_execute_btn_clicked()
     cmd.operate_type = operate_list_[operate_index].operate_type;
     NetworkAgent::GetInstance().SendToServer(cmd);
 
-    this->setFixedWidth(760);
+    this->SetTipsTxt("操作请求正在执行中，请耐心等候......");
+
+    //this->setFixedWidth(760);
 }
 
 void MainWindow::on_project_name_currentIndexChanged(int index)
