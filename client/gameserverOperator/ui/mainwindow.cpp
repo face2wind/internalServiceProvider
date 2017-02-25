@@ -25,17 +25,22 @@ void MainWindow::SetOperateData(Protocol::SCGORequestCommandListACK *ack)
     for (Protocol::SCGOCommandProjectItem item : ack->project_list)
         name_str_list<<item.project_name.c_str();
     ui->project_name->addItems(name_str_list);
+    for (int index = 0; index < (int)ack->project_list.size(); ++ index)
+        ui->project_name->model()->setData(ui->project_name->model()->index(index,0), QSize(25,25), Qt::SizeHintRole);
 
     QStringList opera_str_list;
     for (Protocol::SCGOCommandOperateItem item : ack->operate_list)
         opera_str_list<<item.operate_name.c_str();
     ui->operate_type->addItems(opera_str_list);
+    for (int index = 0; index < (int)ack->operate_list.size(); ++ index)
+        ui->operate_type->model()->setData(ui->operate_type->model()->index(index,0), QSize(25,25), Qt::SizeHintRole);
 
     if (ack->operate_list.size() > 0)
         ui->describe_txt->setText(ack->operate_list[0].operate_describe.c_str());
 
     project_list_ = ack->project_list;
     operate_list_ = ack->operate_list;
+
 }
 
 void MainWindow::AddOutputTxt(Protocol::SCGOCommandOutput*ack)
