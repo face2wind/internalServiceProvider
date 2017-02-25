@@ -110,7 +110,7 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
 
   cout << cmd_str << endl;
       
-  cmd_str = "ls && sleep 3 && ls";
+  //  cmd_str = "ls && sleep 3 && ls";
   FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
     return;
