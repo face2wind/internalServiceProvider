@@ -49,6 +49,13 @@ void MainWindow::SetTipsTxt(const QString &tips_str)
     ui->tips_txt->setText(tips_str);
 }
 
+void MainWindow::SetUIEnable(bool enable)
+{
+    ui->execute_btn->setEnabled(enable);
+    ui->project_name->setEnabled(enable);
+    ui->operate_type->setEnabled(enable);
+}
+
 void MainWindow::on_execute_btn_clicked()
 {
     int project_index = ui->project_name->currentIndex();
@@ -65,6 +72,8 @@ void MainWindow::on_execute_btn_clicked()
     NetworkAgent::GetInstance().SendToServer(cmd);
 
     this->SetTipsTxt("操作请求正在执行中，请耐心等候......");
+    ui->output_msg_txt->clear();
+    this->SetUIEnable(false);
 
     //this->setFixedWidth(760);
 }

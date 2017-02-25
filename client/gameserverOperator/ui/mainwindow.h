@@ -27,6 +27,7 @@ public:
     void SetOperateData(Protocol::SCGORequestCommandListACK *ack);
     void AddOutputTxt(Protocol::SCGOCommandOutput*ack);
     void SetTipsTxt(const QString &tips_str);
+    void SetUIEnable(bool enable);
 
 private slots:
     void on_execute_btn_clicked();

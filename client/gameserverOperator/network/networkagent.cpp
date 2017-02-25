@@ -4,11 +4,32 @@
 #include "commondef.hpp"
 #include "windows.h"
 #include "ui/mainwindow.h"
+#include <QFile>
 
-NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), has_connected_(false)
+NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0), has_connected_(false)
 {
     net_mgr_.RegistSerializeHandler(this);
-    this->ConnectToServer();
+
+    QFile file_project_list("center_server_addr.txt");
+    bool read_file_succ = false;
+
+    if (file_project_list.open(QFile::ReadOnly))
+    {
+        QTextStream in(&file_project_list);
+        QString ip_str;
+        int port;
+        in >> ip_str >> port;
+        center_server_ip_ = ip_str;
+        center_server_port_ = port;
+        read_file_succ = true;
+    }
+    if (!read_file_succ)
+    {
+        center_server_ip_ = "192.168.11.51";
+        center_server_port_ = 52023;
+    }
+
+    this->ConnectToServer(center_server_ip_, center_server_port_);
 }
 
 NetworkAgent & NetworkAgent::GetInstance()
@@ -21,7 +42,7 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
 {
     has_connected_ = true;
 
-    if (ip == SERVER_CENTER_IP_ADDR && port == SERVER_CENTER_LISTEN_PORT)
+    if (ip == center_server_ip_ && port == center_server_port_)
     {
         UIManager::GetInstance().GetMainView()->SetTipsTxt("连接中央服务器成功，查询操作服务器IP端口！");
 
@@ -47,7 +68,7 @@ void NetworkAgent::OnDisconnect()
 {
     has_connected_ = false;
 
-    if (server_ip_ == SERVER_CENTER_IP_ADDR && server_port_ == SERVER_CENTER_LISTEN_PORT)
+    if (server_ip_ == center_server_ip_ && server_port_ == center_server_port_)
     {
         UIManager::GetInstance().GetMainView()->SetTipsTxt("与中央服务器断开，开始连接操作服务器！");
         return;
@@ -56,7 +77,7 @@ void NetworkAgent::OnDisconnect()
     UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，准备重连！");
     Sleep(1000);
 
-    this->ConnectToServer();
+    this->ConnectToServer(center_server_ip_, center_server_port_);
 }
 
 void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
