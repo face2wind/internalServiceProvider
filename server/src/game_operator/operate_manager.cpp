@@ -110,7 +110,7 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
 
   cout << cmd_str << endl;
       
-  //cmd_str = "ls && sleep 3 && ls";
+  cmd_str = "ls && sleep 3 && ls";
   FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
     return;
@@ -139,10 +139,12 @@ bool OperateManager::CommandLock(const std::string &cmd_str)
   on_operating_cmd_mutex_.Lock();
   
   if (on_operating_cmd_set_.find(cmd_str) != on_operating_cmd_set_.end())
+  {
+    on_operating_cmd_mutex_.Unlock();
     return false;
+  }
   
   on_operating_cmd_mutex_.Unlock();
-  
   return true;
 }
 

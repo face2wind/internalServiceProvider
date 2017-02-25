@@ -31,5 +31,8 @@ private:
 
   MessageHandler msg_handler_;
 
+  std::string center_server_ip_;
+  face2wind::Port center_server_port_;
+  face2wind::Port game_operator_listen_port_;
   face2wind::NetworkID center_server_net_id_;
 };

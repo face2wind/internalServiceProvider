@@ -2,12 +2,12 @@
 #include "game_operator_def.hpp"
 #include "internal_protocol_def.hpp"
 #include "commondef.hpp"
-
+#include <fstream>
 #include <iostream>
 
 using namespace face2wind;
 
-NetworkAgent::NetworkAgent() : center_server_net_id_(0)
+NetworkAgent::NetworkAgent() : center_server_port_(0), game_operator_listen_port_(0), center_server_net_id_(0)
 {
   net_mgr_.RegistSerializeHandler(this);
 }
@@ -25,8 +25,27 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::Running()
 {
-  net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
-  net_mgr_.SyncListen(SERVER_GAME_OPERATOR_LISTEN_PORT);
+  std::ifstream file_project_list("center_server_addr.txt", std::ios::in);
+  bool read_file_succ = false;
+  if (file_project_list.is_open())
+  {
+    file_project_list >> center_server_ip_ >> center_server_port_ >> game_operator_listen_port_;
+    if (file_project_list.good()) // read error, set to default ip and port
+      read_file_succ = true;
+    else
+      std::cout<<"read center_server_addr.txt error "<<center_server_ip_ <<":"<<center_server_port_
+               <<", "<<game_operator_listen_port_<<std::endl;
+  }
+
+  if (!read_file_succ)
+  {
+      center_server_ip_ = "192.168.11.51";
+      center_server_port_ = 52023;
+      game_operator_listen_port_ = 52024;
+  }
+
+  net_mgr_.SyncConnect(center_server_ip_, center_server_port_);
+  net_mgr_.SyncListen(game_operator_listen_port_);
   net_mgr_.WaitAllThread();
 }
 
@@ -52,7 +71,7 @@ void NetworkAgent::OnAccept(IPAddr ip, Port port, Port local_port, NetworkID net
 
 void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wind::Port local_port, bool success, face2wind::NetworkID net_id)
 {
-  if (SERVER_CENTER_IP_ADDR == ip && SERVER_CENTER_LISTEN_PORT == port)
+  if (center_server_ip_ == ip && center_server_port_ == port)
   {
     if (success)
     {
@@ -62,7 +81,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
       Protocol::RegisterService msg;
       msg.internal_key = "haha_is_me";
       msg.service_type = ServiceType_GAME_OPERATOR;
-      msg.server_port = SERVER_GAME_OPERATOR_LISTEN_PORT;
+      msg.server_port = game_operator_listen_port_;
       msg.allow_multiple = 0;
       this->SendSerialize(net_id, msg);
     }
@@ -71,7 +90,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
       std::cout<<"connect to center server fail!"<<std::endl;
 
       Timer::Sleep(1000);
-      net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
+      net_mgr_.SyncConnect(center_server_ip_, center_server_port_);
     }
   }
 }
@@ -88,7 +107,7 @@ void NetworkAgent::OnDisconnect(NetworkID net_id)
   if (center_server_net_id_ == net_id)
   {
     Timer::Sleep(1000);
-    net_mgr_.SyncConnect(SERVER_CENTER_IP_ADDR, SERVER_CENTER_LISTEN_PORT);
+    net_mgr_.SyncConnect(center_server_ip_, center_server_port_);
   }
 }
 
