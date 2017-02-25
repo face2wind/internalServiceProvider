@@ -17,13 +17,16 @@ public:
 
     bool HasConnected() { return has_connected_; }
 
-    void ConnectToServer(IPAddr ip = SERVER_CENTER_IP_ADDR, Port port = SERVER_CENTER_LISTEN_PORT);
+    void ConnectToServer(IPAddr ip, Port port);
     void Disconnect();
     void SendToServer(const face2wind::SerializeBase &data);
 
 private:
     IPAddr server_ip_;
     Port server_port_;
+
+    IPAddr center_server_ip_;
+    Port center_server_port_;
 
     bool has_connected_;
     MessageHandler msg_handler_;

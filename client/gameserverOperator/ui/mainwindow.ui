@@ -17,7 +17,7 @@
    </size>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>开发服操作工具</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <widget class="QPushButton" name="execute_btn">
@@ -71,7 +71,7 @@
      </font>
     </property>
     <property name="text">
-     <string>事发地发呆发呆大撒旦撒旦发到发生的发生的多数发达的速度随风倒</string>
+     <string/>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
