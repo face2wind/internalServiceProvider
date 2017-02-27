@@ -2,6 +2,7 @@
 #include "cs_protocol_def.hpp"
 #include "internal_protocol_def.hpp"
 #include "services_manager.hpp"
+#include "center_def.hpp"
 
 using namespace Protocol;
 
@@ -28,7 +29,7 @@ void MessageHandler::OnRecv(face2wind::NetworkID net_id, const face2wind::Serial
   if (func_it_ != handler_func_map_.end())
     (this->*(func_it_->second))(net_id, data);
   else
-    std::cout<<"unknow msg type : "<<msg_type<<std::endl;
+    c_debug<<"unknow msg type : "<<msg_type<<std::endl;
 }
 
 void MessageHandler::UpdateNetMsg(face2wind::NetworkID net_id, face2wind::IPAddr ip)
@@ -39,7 +40,7 @@ void MessageHandler::UpdateNetMsg(face2wind::NetworkID net_id, face2wind::IPAddr
 void MessageHandler::OnUpdateServiceInfoRequest(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
 {
   RegisterService *reg_msg = (RegisterService*)data;
-  std::cout<<"receive register req : key("<<reg_msg->internal_key<<") service_type ("<<reg_msg->service_type
+  c_debug<<"receive register req : key("<<reg_msg->internal_key<<") service_type ("<<reg_msg->service_type
            <<") server_port ("<<reg_msg->server_port<<") allow_multiple ("<<reg_msg->allow_multiple<<std::endl;
   services_mgr_->OnUpdateServiceInfo(net_id, reg_msg->service_type, this->GetIpWithNetID(net_id), reg_msg->server_port, reg_msg->allow_multiple);
 }
