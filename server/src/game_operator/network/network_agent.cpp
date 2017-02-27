@@ -33,7 +33,7 @@ void NetworkAgent::Running()
     if (file_project_list.good()) // read error, set to default ip and port
       read_file_succ = true;
     else
-      std::cout<<"read center_server_addr.txt error "<<center_server_ip_ <<":"<<center_server_port_
+      g_debug<<"read center_server_addr.txt error "<<center_server_ip_ <<":"<<center_server_port_
                <<", "<<game_operator_listen_port_<<std::endl;
   }
 
@@ -61,12 +61,12 @@ void NetworkAgent::Disconnect(face2wind::NetworkID net_id)
 
 void NetworkAgent::OnListenFail(Port port)
 {
-  std::cout<<"OnListenFail !"<<std::endl;
+  g_debug<<"OnListenFail !"<<std::endl;
 }
 
 void NetworkAgent::OnAccept(IPAddr ip, Port port, Port local_port, NetworkID net_id)
 {
-  std::cout<<"some one connect : " <<ip<<":"<<port<<", netid("<<net_id<<")"<<std::endl;
+  g_debug<<"some one connect : " <<ip<<":"<<port<<", netid("<<net_id<<")"<<std::endl;
 }
 
 void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wind::Port local_port, bool success, face2wind::NetworkID net_id)
@@ -77,7 +77,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
     {
       center_server_net_id_ = net_id;
       
-      std::cout<<"connect to center server success!"<<std::endl;
+      g_debug<<"connect to center server success!"<<std::endl;
       Protocol::RegisterService msg;
       msg.internal_key = "haha_is_me";
       msg.service_type = ServiceType_GAME_OPERATOR;
@@ -87,7 +87,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
     }
     else
     {
-      std::cout<<"connect to center server fail!"<<std::endl;
+      g_debug<<"connect to center server fail!"<<std::endl;
 
       Timer::Sleep(1000);
       net_mgr_.SyncConnect(center_server_ip_, center_server_port_);
@@ -102,7 +102,7 @@ void NetworkAgent::OnRecv(face2wind::NetworkID net_id, const face2wind::Serializ
 
 void NetworkAgent::OnDisconnect(NetworkID net_id)
 {
-  std::cout<<"some one disconnect : netid("<<net_id<<")"<<std::endl;
+  g_debug<<"some one disconnect : netid("<<net_id<<")"<<std::endl;
 
   if (center_server_net_id_ == net_id)
   {

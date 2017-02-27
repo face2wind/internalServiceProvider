@@ -1,14 +1,18 @@
 #include "operate_manager.hpp"
 #include "network/network_agent.hpp"
 #include "commondef.hpp"
+#include "game_operator_def.hpp"
 
-#include <iostream>
 //#include <fiostream.h>
 #include <fstream>
 
 using namespace Protocol;
-using std::cout;
-using std::endl;
+
+void HandleCommandThreadTask::Run()
+{
+  if (nullptr != operate_mgr_)
+    operate_mgr_->DoHandleCommand(net_id_, project_type_, operate_type_);
+}
 
 OperateManager::OperateManager()
 {
@@ -18,13 +22,13 @@ OperateManager::OperateManager()
   
   if (!file_project_list.is_open())
   {
-    cout << "cannot open file project_list.txt" << endl;
+    g_debug << "cannot open file project_list.txt" << std::endl;
     return;
   }
   
   if (!file_operate_list.is_open())
   {
-    cout << "cannot open file operate_list.txt" << endl;
+    g_debug << "cannot open file operate_list.txt" << std::endl;
     return;
   }
 
@@ -44,15 +48,17 @@ OperateManager::OperateManager()
       operate_list_.push_back(o_item);
   }
   
-  cout << "read game_data complete!" << endl;
+  g_debug << "read game_data complete!" << std::endl;
   
   file_operate_list.close();
   file_project_list.close();
+
+  thread_pool_.Run(MAX_HANDLE_THREAD_NUM);
 }
 
 OperateManager::~OperateManager()
 {
-
+  thread_pool_.Stop();
 }
 
 void OperateManager::OnRequestCommandList(face2wind::NetworkID net_id)
@@ -83,15 +89,43 @@ void OperateManager::OnRequestCommandList(face2wind::NetworkID net_id)
   }
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
 
-  std::cout<<"OperateManager::OnRequestCommandList"<<std::endl; 
+  g_debug<<"OperateManager::OnRequestCommandList"<<std::endl; 
 }
 
 void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_type, int operate_type)
 {
-  //cout << "OperateManager::OnRequestCommand" << endl;
+  //do not let the read pipe action block the socket thread, do it in thread pool
+  HandleCommandThreadTask *task = new HandleCommandThreadTask(this, net_id, project_type, operate_type);
+  if (nullptr != task)
+    thread_pool_.AddTask(task);
+}
+
+bool OperateManager::CommandLock(const std::string &cmd_str)
+{
+  on_operating_cmd_mutex_.Lock();
+  bool cmd_not_running = (on_operating_cmd_set_.find(cmd_str) == on_operating_cmd_set_.end());
+  if (cmd_not_running)
+    on_operating_cmd_set_.insert(cmd_str);
+  on_operating_cmd_mutex_.Unlock();
+  
+  return cmd_not_running;
+}
+
+bool OperateManager::CommandUnlock(const std::string &cmd_str)
+{
+  on_operating_cmd_mutex_.Lock();
+  on_operating_cmd_set_.erase(cmd_str);
+  on_operating_cmd_mutex_.Unlock();
+
+  return true;
+}
+
+void OperateManager::DoHandleCommand(face2wind::NetworkID net_id, int project_type, int operate_type)
+{
+    //g_debug << "OperateManager::OnRequestCommand" << std::endl;
   if (project_type >= (int)project_list_.size() || operate_type >= (int)operate_list_.size())
   {
-    cout <<"project_type or operate_type invalid"<< endl;
+    g_debug  <<"project_type or operate_type invalid"<< std::endl;
     return;
   }
 
@@ -108,12 +142,17 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
     return;
   }
 
-  cout << cmd_str << endl;
+  g_debug << cmd_str << std::endl;
       
-  //  cmd_str = "ls && sleep 3 && ls";
-  FILE *pp = popen(cmd_str.c_str(), "r");
+  FILE *pp = popen("ls && sleep 3 && ls", "r");
+  //FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
+  {
+    g_debug << " popen "<< cmd_str << " Fail"<< std::endl;
+    ack.operate_result = OperateResultType_CANNOT_GET_LOCK;
+    NetworkAgent::GetInstance().SendSerialize(net_id, ack);
     return;
+  }
 
   SCGOCommandOutput output_msg;
   char tmp[1024];
@@ -132,29 +171,4 @@ void OperateManager::OnRequestCommand(face2wind::NetworkID net_id, int project_t
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
 
   this->CommandUnlock(cmd_str);
-}
-
-bool OperateManager::CommandLock(const std::string &cmd_str)
-{
-  on_operating_cmd_mutex_.Lock();
-  
-  if (on_operating_cmd_set_.find(cmd_str) != on_operating_cmd_set_.end())
-  {
-    on_operating_cmd_mutex_.Unlock();
-    return false;
-  }
-  
-  on_operating_cmd_mutex_.Unlock();
-  return true;
-}
-
-bool OperateManager::CommandUnlock(const std::string &cmd_str)
-{
-  on_operating_cmd_mutex_.Lock();
-  
-  on_operating_cmd_set_.erase(cmd_str);
-  
-  on_operating_cmd_mutex_.Unlock();
-
-  return true;
 }

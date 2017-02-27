@@ -2,6 +2,7 @@
 #include "cs_protocol_def.hpp"
 #include "network_agent.hpp"
 #include "operate_manager.hpp"
+#include "game_operator_def.hpp"
 
 using namespace Protocol;
 
@@ -28,7 +29,7 @@ void MessageHandler::OnRecv(face2wind::NetworkID net_id, const face2wind::Serial
   if (func_it_ != handler_func_map_.end())
     (this->*(func_it_->second))(net_id, data);
   else
-    std::cout<<"unknow msg type : "<<msg_type<<std::endl;
+    g_debug<<"unknow msg type : "<<msg_type<<std::endl;
 }
 
 void MessageHandler::OnRequestCommandList(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
