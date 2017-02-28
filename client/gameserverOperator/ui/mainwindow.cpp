@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
    // this->setFixedWidth(210);
     this->setFixedWidth(760);
     this->setFixedHeight(360);
+    this->SetUIEnable(false);
 }
 
 MainWindow::~MainWindow()

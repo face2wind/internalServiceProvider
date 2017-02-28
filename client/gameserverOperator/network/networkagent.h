@@ -29,6 +29,7 @@ private:
     Port center_server_port_;
 
     bool has_connected_;
+    bool is_connecting_;
     MessageHandler msg_handler_;
 
     face2wind::SerializeNetworkManager net_mgr_;

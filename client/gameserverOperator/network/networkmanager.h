@@ -6,6 +6,7 @@
 
 #include <QtNetwork>
 #include <QObject>
+#include <QTimer>
 
 typedef quint16 Port;
 typedef QHostAddress IPAddr;
@@ -46,6 +47,7 @@ public:
 
     void Send(const char *data, int length);
     void Disconnect();
+    void DelayReconnect();
 
 protected slots:
     virtual void OnConnect();
@@ -55,12 +57,16 @@ protected slots:
 
     virtual void OnRecvPackage(char *data, int length);
     virtual void displayError(QAbstractSocket::SocketError);  //显示错误
+    void OnReconnectTimerTimeOut();
 
 private:
     std::set<INetworkHandler*> handler_set_;
+    QTimer reconnect_timer;
 
     QByteArray receive_ba_;
     int body_length_;
+    IPAddr last_connect_ip;
+    Port last_connect_port;
 };
 
 #endif // NETWORKMANAGER_H

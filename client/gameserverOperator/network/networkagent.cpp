@@ -2,11 +2,11 @@
 #include "ui/ui_manager.hpp"
 #include "cs_protocol_def.hpp"
 #include "commondef.hpp"
-#include "windows.h"
 #include "ui/mainwindow.h"
 #include <QFile>
+#include "client_def.hpp"
 
-NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0), has_connected_(false)
+NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0), has_connected_(false), is_connecting_(false)
 {
     net_mgr_.RegistSerializeHandler(this);
 
@@ -25,7 +25,7 @@ NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip
     }
     if (!read_file_succ)
     {
-        center_server_ip_ = "192.168.11.51";
+        center_server_ip_ = "192.168.11.199";
         center_server_port_ = 52023;
     }
 
@@ -41,6 +41,9 @@ NetworkAgent & NetworkAgent::GetInstance()
 void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success)
 {
     has_connected_ = true;
+    is_connecting_ = false;
+    server_ip_ = ip;
+    server_port_ = port;
 
     if (ip == center_server_ip_ && port == center_server_port_)
     {
@@ -53,6 +56,7 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
     else
     {
         UIManager::GetInstance().GetMainView()->SetTipsTxt("连接操作服务器成功，查询游戏列表！");
+        UIManager::GetInstance().GetMainView()->SetUIEnable(true);
 
         Protocol::CSGORequestCommandList req_command_list;
         this->SendToServer(req_command_list);
@@ -67,6 +71,7 @@ void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)
 void NetworkAgent::OnDisconnect()
 {
     has_connected_ = false;
+    UIManager::GetInstance().GetMainView()->SetUIEnable(false);
 
     if (server_ip_ == center_server_ip_ && server_port_ == center_server_port_)
     {
@@ -75,19 +80,19 @@ void NetworkAgent::OnDisconnect()
     }
 
     UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，准备重连！");
-    Sleep(1000);
 
-    this->ConnectToServer(center_server_ip_, center_server_port_);
+//    SLEEP(2000);
+
+    net_mgr_.DelayReconnect();
 }
 
 void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
 {
-    if (0 != port)
+    if (!is_connecting_)
     {
-        server_ip_ = ip;
-        server_port_ = port;
+        is_connecting_ = true;
+        net_mgr_.SyncConnect(ip, port);
     }
-    net_mgr_.SyncConnect(server_ip_, server_port_);
 }
 
 void NetworkAgent::Disconnect()

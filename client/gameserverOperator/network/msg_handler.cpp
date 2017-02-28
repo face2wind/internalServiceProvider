@@ -5,10 +5,11 @@
 #include <QtCore>
 #include "ui/mainwindow.h"
 #include "commondef.hpp"
+#include "client_def.hpp"
 
 using namespace Protocol;
 
-MessageHandler::MessageHandler()
+MessageHandler::MessageHandler(QObject *parent) : QObject(parent)
 {
     handler_func_map_["SCCheckServiceInfoAck"] = &MessageHandler::OnCheckServiceInfoAck;
     handler_func_map_["SCGORequestCommandListACK"] = &MessageHandler::OnRequestCommandListACK;
@@ -31,15 +32,22 @@ void MessageHandler::OnRecv(const face2wind::SerializeBase *data)
 
 void MessageHandler::OnCheckServiceInfoAck(const face2wind::SerializeBase *data)
 {
-    NetworkAgent::GetInstance().Disconnect();
-
     Protocol::SCCheckServiceInfoAck *ack = (Protocol::SCCheckServiceInfoAck*)data;
     if (0 == ack->port)
     {
         qDebug()<<"MessageHandler::OnCheckServiceInfoAck receive port == 0";
         UIManager::GetInstance().GetMainView()->SetTipsTxt("游戏操作服务器未启动，请联系服务端！");
+
+        SLEEP(2000);
+
+        Protocol::CSCheckServiceInfo check_info;
+        check_info.service_type = ServiceType_GAME_OPERATOR;
+        NetworkAgent::GetInstance().SendToServer(check_info);
+
         return;
     }
+
+    NetworkAgent::GetInstance().Disconnect();
     NetworkAgent::GetInstance().ConnectToServer(IPAddr(ack->ip_addr.c_str()), ack->port);
 }
 
@@ -64,10 +72,10 @@ void MessageHandler::OnCommandAck(const face2wind::SerializeBase *data)
     if (OperateResultType_SUCC == cmd_ack->operate_result)
     {
         UIManager::GetInstance().GetMainView()->SetTipsTxt("操作执行完毕！");
-        UIManager::GetInstance().GetMainView()->SetUIEnable(true);
     }
     else if (OperateResultType_CANNOT_GET_LOCK == cmd_ack->operate_result)
     {
         UIManager::GetInstance().GetMainView()->SetTipsTxt("您还有一个操作请求未执行完毕，请稍等！");
     }
+    UIManager::GetInstance().GetMainView()->SetUIEnable(true);
 }

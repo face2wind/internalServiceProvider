@@ -1,13 +1,14 @@
 #include "networkmanager.h"
 #include <string.h>
 
-NetworkManager::NetworkManager(QObject *parent) : QTcpSocket(parent), body_length_(0)
+NetworkManager::NetworkManager(QObject *parent) : QTcpSocket(parent), body_length_(0), reconnect_timer(this)
 {
     connect(this, SIGNAL(connected()), this, SLOT(OnConnect()));
     connect(this, SIGNAL(readyRead()), this, SLOT(OnRecv()));
     connect(this, SIGNAL(disconnected()), this, SLOT(OnDisconnect()));
     connect(this, SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(displayError(QAbstractSocket::SocketError)));
 
+    connect(&reconnect_timer, SIGNAL(timeout()), this, SLOT(OnReconnectTimerTimeOut()));
 }
 
 NetworkManager::~NetworkManager()
@@ -16,6 +17,8 @@ NetworkManager::~NetworkManager()
     disconnect(this, SIGNAL(readyRead()), this, SLOT(OnRecv()));
     disconnect(this, SIGNAL(disconnected()), this, SLOT(OnDisconnect()));
     disconnect(this, SIGNAL(error(QAbstractSocket::SocketError)),this,SLOT(displayError(QAbstractSocket::SocketError)));
+
+    disconnect(&reconnect_timer, SIGNAL(timeout()), this, SLOT(OnReconnectTimerTimeOut()));
 }
 
 NetworkManager & NetworkManager::GetInstance()
@@ -53,19 +56,29 @@ void NetworkManager::Send(const char *data, int length)
 void NetworkManager::Disconnect()
 {
     this->abort();
-    this->close();
+}
+
+void NetworkManager::DelayReconnect()
+{
+    reconnect_timer.start(1000);
 }
 
 // protected:
 
 void NetworkManager::OnConnect()
 {
+    reconnect_timer.stop();
+
     //IPAddr remote_ip, Port remote_port, Port local_port
-    qDebug()<<" has connect to "<<this->peerAddress()<<":"<<this->peerPort();
+    QString peer_addr = this->peerAddress().toString();
+    qDebug()<<" has connect to "<<peer_addr<<":"<<this->peerPort();
+
+    last_connect_ip = IPAddr(peer_addr);
+    last_connect_port = this->peerPort();
 
     for (INetworkHandler *handler : handler_set_)
     {
-        handler->OnConnect(this->peerAddress(), this->peerPort(), this->localPort(), true);
+        handler->OnConnect(IPAddr(peer_addr), this->peerPort(), this->localPort(), true);
     }
 }
 
@@ -111,8 +124,10 @@ void NetworkManager::OnRecv()
 
 void NetworkManager::OnDisconnect()
 {
-    this->abort();
-    this->close();
+    qDebug()<<"断开连接了。。。。。。";
+    //this->abort();
+    //this->reset();
+    //this->close();
 
     for (INetworkHandler *handler : handler_set_)
     {
@@ -132,4 +147,10 @@ void NetworkManager::displayError(QAbstractSocket::SocketError)
 {
     qDebug() << this->errorString(); //输出错误信息
     this->OnDisconnect();
+}
+
+void NetworkManager::OnReconnectTimerTimeOut()
+{
+    qDebug()<<"重新连接..........";
+    this->SyncConnect(last_connect_ip, last_connect_port);
 }
