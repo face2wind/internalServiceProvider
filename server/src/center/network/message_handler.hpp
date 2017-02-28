@@ -13,6 +13,8 @@ class MessageHandler
  public:
   MessageHandler();
   ~MessageHandler();
+
+  ServicesManager *GetServiceMgr() { return services_mgr_; }
   
   void OnRecv(face2wind::NetworkID net_id, const face2wind::SerializeBase *data);
   void UpdateNetMsg(face2wind::NetworkID net_id, face2wind::IPAddr ip);

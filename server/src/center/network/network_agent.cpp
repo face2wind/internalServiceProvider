@@ -1,6 +1,6 @@
 #include "network_agent.hpp"
 #include "center_def.hpp"
-
+#include "services_manager.hpp"
 #include <iostream>
 
 using namespace face2wind;
@@ -58,10 +58,12 @@ void NetworkAgent::OnRecv(face2wind::NetworkID net_id, const face2wind::Serializ
   msg_handler_.OnRecv(net_id, data);
 }
 
-void NetworkAgent::OnDisconnect(NetworkID net_id)
+void NetworkAgent::OnDisconnect(face2wind::NetworkID net_id)
 {
   c_debug<<"some one disconnect : netid("<<net_id<<")"<<std::endl;
-  //PlayerManager::GetInstance().OnClientDisconnect(net_id);
+  ServicesManager *services_mgr = msg_handler_.GetServiceMgr();
+  if (nullptr != services_mgr)
+    services_mgr->OnDisconnect(net_id);
 }
 
   

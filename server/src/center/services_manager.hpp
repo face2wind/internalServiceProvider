@@ -19,6 +19,7 @@ class ServicesManager
  public:
   void OnUpdateServiceInfo(face2wind::NetworkID net_id, int service_type, face2wind::IPAddr ip, face2wind::Port port, bool allow_multiple);
   void OnCheckServiceInfo(face2wind::NetworkID net_id, int service_type);
+  void OnDisconnect(face2wind::NetworkID net_id);
   
  protected:
   std::map<face2wind::NetworkID, ServiceItem> service_item_map_;

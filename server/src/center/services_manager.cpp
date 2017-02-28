@@ -2,6 +2,7 @@
 #include "cs_protocol_def.hpp"
 #include "network/network_agent.hpp"
 #include "center_def.hpp"
+#include "services_manager.hpp"
 
 void ServicesManager::OnUpdateServiceInfo(face2wind::NetworkID net_id, int service_type, face2wind::IPAddr ip, face2wind::Port port, bool allow_multiple)
 {
@@ -34,4 +35,9 @@ void ServicesManager::OnCheckServiceInfo(face2wind::NetworkID net_id, int servic
     }
   }
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
+}
+
+void ServicesManager::OnDisconnect(face2wind::NetworkID net_id)
+{
+  service_item_map_.erase(net_id);
 }
