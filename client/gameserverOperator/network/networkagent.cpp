@@ -6,7 +6,7 @@
 #include <QFile>
 #include "client_def.hpp"
 
-NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0), has_connected_(false), is_connecting_(false)
+NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0)
 {
     net_mgr_.RegistSerializeHandler(this);
 
@@ -40,8 +40,6 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success)
 {
-    has_connected_ = true;
-    is_connecting_ = false;
     server_ip_ = ip;
     server_port_ = port;
 
@@ -70,29 +68,22 @@ void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)
 
 void NetworkAgent::OnDisconnect()
 {
-    has_connected_ = false;
     UIManager::GetInstance().GetMainView()->SetUIEnable(false);
 
     if (server_ip_ == center_server_ip_ && server_port_ == center_server_port_)
     {
-        UIManager::GetInstance().GetMainView()->SetTipsTxt("与中央服务器断开，开始连接操作服务器！");
+        UIManager::GetInstance().GetMainView()->SetTipsTxt("与中央服务器断开，开始连接操作服务器。。。");
         return;
     }
 
-    UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，准备重连！");
-
-//    SLEEP(2000);
+    UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，正在重连。。。。。。");
 
     net_mgr_.DelayReconnect();
 }
 
 void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
 {
-    if (!is_connecting_)
-    {
-        is_connecting_ = true;
-        net_mgr_.SyncConnect(ip, port);
-    }
+    net_mgr_.SyncConnect(ip, port);
 }
 
 void NetworkAgent::Disconnect()

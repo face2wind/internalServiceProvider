@@ -2,6 +2,7 @@
 #define MSG_HANDLER_HPP
 
 #include <QObject>
+#include <QTimer>
 #include <map>
 #include <memory/serialize/serialize_base.hpp>
 
@@ -24,8 +25,12 @@ protected:
     void OnCommandOutput(const face2wind::SerializeBase *data);
     void OnCommandAck(const face2wind::SerializeBase *data);
 
+protected slots:
+    void OnCheckServiceTimerTimeOut();
+
 private:
     std::map<std::string, MessageHandlerFunc> handler_func_map_;
+    QTimer check_service_timer;
 };
 
 #endif // NETWORKAGENT_H

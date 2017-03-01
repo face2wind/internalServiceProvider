@@ -60,7 +60,7 @@ void NetworkManager::Disconnect()
 
 void NetworkManager::DelayReconnect()
 {
-    reconnect_timer.start(1000);
+    reconnect_timer.start(2000);
 }
 
 // protected:
@@ -69,7 +69,6 @@ void NetworkManager::OnConnect()
 {
     reconnect_timer.stop();
 
-    //IPAddr remote_ip, Port remote_port, Port local_port
     QString peer_addr = this->peerAddress().toString();
     qDebug()<<" has connect to "<<peer_addr<<":"<<this->peerPort();
 
@@ -124,11 +123,6 @@ void NetworkManager::OnRecv()
 
 void NetworkManager::OnDisconnect()
 {
-    qDebug()<<"断开连接了。。。。。。";
-    //this->abort();
-    //this->reset();
-    //this->close();
-
     for (INetworkHandler *handler : handler_set_)
     {
         handler->OnDisconnect();
@@ -151,6 +145,6 @@ void NetworkManager::displayError(QAbstractSocket::SocketError)
 
 void NetworkManager::OnReconnectTimerTimeOut()
 {
-    qDebug()<<"重新连接..........";
+    qDebug()<<"reconnect to"<<last_connect_ip.toString()<<":"<<last_connect_port;
     this->SyncConnect(last_connect_ip, last_connect_port);
 }

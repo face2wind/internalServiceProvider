@@ -22,6 +22,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::SetOperateData(Protocol::SCGORequestCommandListACK *ack)
 {
+    // clear combobox
+    {
+        int pName_count = ui->project_name->count();
+        for (int index = 0; index < pName_count; ++ index)
+            ui->project_name->removeItem(0);
+        int oList_count = ui->operate_type->count();
+        for (int index = 0; index < oList_count; ++ index)
+            ui->operate_type->removeItem(0);
+    }
+
     QStringList name_str_list;
     for (Protocol::SCGOCommandProjectItem item : ack->project_list)
         name_str_list<<item.project_name.c_str();
@@ -86,13 +96,13 @@ void MainWindow::on_execute_btn_clicked()
 
 void MainWindow::on_project_name_currentIndexChanged(int index)
 {
-    if (index >= (int)project_list_.size())
+    if (index < 0 || index >= (int)project_list_.size())
         return;
 }
 
 void MainWindow::on_operate_type_currentIndexChanged(int index)
 {
-    if (index >= (int)operate_list_.size())
+    if (index < 0 || index >= (int)operate_list_.size())
         return;
 
     ui->describe_txt->setText(operate_list_[index].operate_describe.c_str());

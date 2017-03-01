@@ -5,7 +5,3 @@
 //const static IPAddr SERVER_CENTER_IP_ADDR = QHostAddress("192.168.11.51");
 //const static Port SERVER_CENTER_LISTEN_PORT = 52023;
 
-#ifdef _WIN32
-#include <windows.h>
-#define SLEEP(time) Sleep(time)
-#endif

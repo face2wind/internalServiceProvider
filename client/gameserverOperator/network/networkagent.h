@@ -15,8 +15,6 @@ public:
     virtual void OnRecv(const face2wind::SerializeBase *data);
     virtual void OnDisconnect();
 
-    bool HasConnected() { return has_connected_; }
-
     void ConnectToServer(IPAddr ip, Port port);
     void Disconnect();
     void SendToServer(const face2wind::SerializeBase &data);
@@ -28,8 +26,6 @@ private:
     IPAddr center_server_ip_;
     Port center_server_port_;
 
-    bool has_connected_;
-    bool is_connecting_;
     MessageHandler msg_handler_;
 
     face2wind::SerializeNetworkManager net_mgr_;
