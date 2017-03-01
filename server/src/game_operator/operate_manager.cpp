@@ -144,8 +144,8 @@ void OperateManager::DoHandleCommand(face2wind::NetworkID net_id, int project_ty
 
   g_debug << cmd_str << std::endl;
       
-  FILE *pp = popen("ls && sleep 3 && ls", "r");
-  //FILE *pp = popen(cmd_str.c_str(), "r");
+  //FILE *pp = popen("ls && sleep 3 && ls", "r");
+  FILE *pp = popen(cmd_str.c_str(), "r");
   if (!pp)
   {
     g_debug << " popen "<< cmd_str << " Fail"<< std::endl;
