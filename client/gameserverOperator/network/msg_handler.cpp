@@ -71,7 +71,7 @@ void MessageHandler::OnCommandAck(const face2wind::SerializeBase *data)
 
     if (OperateResultType_SUCC == cmd_ack->operate_result)
     {
-        UIManager::GetInstance().GetMainView()->SetTipsTxt("操作执行完毕！");
+        UIManager::GetInstance().GetMainView()->OperateSucc();
     }
     else if (OperateResultType_CANNOT_GET_LOCK == cmd_ack->operate_result)
     {

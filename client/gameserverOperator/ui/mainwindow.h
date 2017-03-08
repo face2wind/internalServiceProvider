@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <deque>
+#include <set>
 #include "cs_protocol_def.hpp"
 
 namespace Ui {
@@ -14,6 +15,13 @@ struct ChatMessageItem
     unsigned int sender_id;
     unsigned int receiver_id;
     std::string message;
+};
+
+enum class OperateType
+{
+    DEV_SERVER_NORMAL,
+    HOT_UPDATE,
+    NEW_VERSION,
 };
 
 class MainWindow : public QMainWindow
@@ -28,6 +36,11 @@ public:
     void AddOutputTxt(Protocol::SCGOCommandOutput*ack);
     void SetTipsTxt(const QString &tips_str);
     void SetUIEnable(bool enable);
+    void OperateSucc();
+
+protected:
+    void ReadRecord();
+    void SaveRecord();
 
 private slots:
     void on_execute_btn_clicked();
@@ -41,6 +54,17 @@ private:
 
     std::vector<Protocol::SCGOCommandProjectItem> project_list_;
     std::vector<Protocol::SCGOCommandOperateItem> operate_list_;
+
+    std::set<QString> cur_hot_update_type_set_;
+    std::map<QString,QString> hot_update_type_map_;
+    std::map<QString,OperateType> operate_type_map_;
+
+    OperateType cur_operate_type_;
+
+    QString cur_version_str_;
+
+    int last_project_index_;
+    int last_operate_index_;
 };
 
 #endif // CHATWINDOW_H
