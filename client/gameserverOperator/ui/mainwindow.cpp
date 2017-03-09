@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     operate_type_map_["发版本"] = OperateType::NEW_VERSION;
 
     ui->setupUi(this);
-   // this->setFixedWidth(210);
+    ui->tips_txt->setTextInteractionFlags(Qt::TextSelectableByMouse);
     this->setFixedWidth(800);
     this->setFixedHeight(360);
     this->SetUIEnable(false);
