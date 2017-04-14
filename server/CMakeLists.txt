@@ -3,8 +3,8 @@ project(internalServiceProvider)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -g -ggdb -O0 -pthread -Wall -Werror")
 set(ELEGANCE_SRC_PATH "../../Elegance/src/")
-#set(ELEGANCE_LIB_PATH "../../Elegance/build/")
-set(ELEGANCE_LIB_PATH "../../elegance_build") # for vbox slackware
+set(ELEGANCE_LIB_PATH "../../Elegance/build/")
+#set(ELEGANCE_LIB_PATH "../../elegance_build") # for vbox slackware
 
 file(GLOB_RECURSE SERVER_CENTER_FILES ../common/*.cpp src/center/*.cpp server_center.cpp)
 file(GLOB_RECURSE SERVER_GAME_OPERATOR_FILES ../common/*.cpp src/game_operator/*.cpp server_game_operator.cpp)
@@ -17,7 +17,7 @@ add_executable(server_game_operator ${SERVER_GAME_OPERATOR_FILES})
 target_include_directories(server_center PUBLIC ${ELEGANCE_SRC_PATH} ../common/ src/center )
 target_include_directories(server_game_operator PUBLIC ${ELEGANCE_SRC_PATH} ../common/ src/game_operator)
 
-target_link_libraries(server_center libElegance.a)
-target_link_libraries(server_game_operator libElegance.a)
+target_link_libraries(server_center libElegance.so)
+target_link_libraries(server_game_operator libElegance.so)
 
 

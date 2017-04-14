@@ -1,6 +1,6 @@
 #include "message_handler.hpp"
-#include "cs_protocol_def.hpp"
-#include "internal_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
+#include "protocol/internal_protocol_def.hpp"
 #include "services_manager.hpp"
 #include "center_def.hpp"
 

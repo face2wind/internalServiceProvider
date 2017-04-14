@@ -1,0 +1,31 @@
+<ServerConfig>
+  <CenterServer>
+    <IpAddr>127.0.0.1</IpAddr>
+    <Port>52013</Port>
+  </CenterServer>
+  
+  <GameServer>
+    <Port>52014</Port>
+  </GameServer>
+  
+  <ProjectList>
+    <Project type='0' cmd='tt_cn' name='天天大陆' />
+    <Project type='1' cmd='tt_vn' name='天天越南' />
+  </ProjectList>
+  
+  <OperateList>
+    <Project type='0' cmd='update' name='更新' detail='更新配置并重启服务器'/>
+    <Project type='1' cmd='update' name='更新' detail='更新配置并重启服务器'/>
+  </OperateList>
+  
+  <UserProjectList>
+    <ListItem list_type='1'>
+      <ProjectType>0</ProjectType>
+      <ProjectType>1</ProjectType>
+    </ListItem>
+    <ListItem list_type='2'>
+      <ProjectType>2</ProjectType>
+    </ListItem>
+  </UserProjectList>
+  
+</ServerConfig>

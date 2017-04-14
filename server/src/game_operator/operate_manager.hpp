@@ -6,7 +6,7 @@
 #include <platform/network/socket_def.hpp>
 #include <platform/thread/mutex.hpp>
 #include <platform/thread/thread_pool.hpp>
-#include "cs_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
 
 class OperateManager;
 

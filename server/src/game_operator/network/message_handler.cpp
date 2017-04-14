@@ -1,5 +1,5 @@
 #include "message_handler.hpp"
-#include "cs_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
 #include "network_agent.hpp"
 #include "operate_manager.hpp"
 #include "game_operator_def.hpp"

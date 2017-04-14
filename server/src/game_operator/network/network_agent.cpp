@@ -1,6 +1,6 @@
 #include "network_agent.hpp"
 #include "game_operator_def.hpp"
-#include "internal_protocol_def.hpp"
+#include "protocol/internal_protocol_def.hpp"
 #include "commondef.hpp"
 #include <fstream>
 #include <iostream>
