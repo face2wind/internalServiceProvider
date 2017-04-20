@@ -9,6 +9,10 @@ using namespace std;
 int main()
 {
   //face2wind::DebugMessage::GetInstance().SetOnshowType(face2wind::DebugMessageType::BASE_NETWORK, true);
-  ServerConfig::Instance().LoadXml("../conf/serverconfig.xml");
+  if (!ServerConfig::Instance().LoadXml("serverconfig.xml"))
+  {
+    return -1;
+  }
+    
   NetworkAgent::GetInstance().Running();
 }

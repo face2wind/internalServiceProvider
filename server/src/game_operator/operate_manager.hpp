@@ -28,19 +28,6 @@ class HandleCommandThreadTask : public face2wind::ThreadPoolWorkingTask
 class OperateManager
 {
   const static int MAX_HANDLE_THREAD_NUM = 8;
-  
-  struct ProjectItem
-  {
-    std::string cmd_name;
-    std::string show_name;
-  };
-
-  struct OperateItem
-  {
-    std::string cmd_name;
-    std::string show_name;
-    std::string describe;
-  };
 
  public:
   OperateManager();
@@ -59,9 +46,6 @@ class OperateManager
  private:
   face2wind::ThreadPool thread_pool_;
   
-  std::vector<ProjectItem> project_list_;
-  std::vector<OperateItem> operate_list_;
-
   std::set<std::string> on_operating_cmd_set_;
   face2wind::Mutex on_operating_cmd_mutex_;
 };

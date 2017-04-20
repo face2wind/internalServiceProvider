@@ -2,9 +2,9 @@
 #include "network/network_agent.hpp"
 #include "commondef.hpp"
 #include "game_operator_def.hpp"
+#include "xml/serverconfig.hpp"
 
-//#include <fiostream.h>
-#include <fstream>
+//#include <fstream>
 
 using namespace Protocol;
 
@@ -16,43 +16,6 @@ void HandleCommandThreadTask::Run()
 
 OperateManager::OperateManager()
 {
-  std::ifstream file_project_list("project_list.txt", std::ios::in);
-  std::ifstream file_operate_list("operate_list.txt", std::ios::in);
-  //file_operate_list.open("game_data", std::ios::in);
-  
-  if (!file_project_list.is_open())
-  {
-    g_debug << "cannot open file project_list.txt" << std::endl;
-    return;
-  }
-  
-  if (!file_operate_list.is_open())
-  {
-    g_debug << "cannot open file operate_list.txt" << std::endl;
-    return;
-  }
-
-  while (!file_project_list.eof())
-  {
-    ProjectItem p_item;
-    file_project_list >> p_item.cmd_name >> p_item.show_name;
-    if (file_project_list.good())
-      project_list_.push_back(p_item);
-  }
-
-  while (!file_operate_list.eof())
-  {
-    OperateItem o_item;
-    file_operate_list >> o_item.cmd_name >> o_item.show_name >> o_item.describe;
-    if (file_operate_list.good())
-      operate_list_.push_back(o_item);
-  }
-  
-  g_debug << "read game_data complete!" << std::endl;
-  
-  file_operate_list.close();
-  file_project_list.close();
-
   thread_pool_.Run(MAX_HANDLE_THREAD_NUM);
 }
 
@@ -65,27 +28,30 @@ void OperateManager::OnRequestCommandList(face2wind::NetworkID net_id)
 {
   SCGORequestCommandListACK ack;
 
-  int project_type(0);
-  for (ProjectItem p_item : project_list_)
-  {
-    Protocol::SCGOCommandProjectItem item;
-    item.project_type = project_type;
-    item.project_name = p_item.show_name;
-    ack.project_list.push_back(item);
+  const std::vector<int> *p_list = ServerConfig::Instance().GetUserProjectList(1);
+  if (nullptr == p_list)
+    return;
 
-    ++ project_type;
+  for (int p_type : *p_list)
+  {
+    const ServerCfgProject *p_cfg = ServerConfig::Instance().GetProjectCfg(p_type);
+    if (nullptr == p_cfg)
+      continue;
+
+    Protocol::SCGOCommandProjectItem item;
+    item.project_type = p_cfg->type;
+    item.project_name = p_cfg->name;
+    ack.project_list.push_back(item);
   }
 
-  int operate_type(0);
-  for (OperateItem o_item : operate_list_)
+  const std::vector<ServerCfgOperate> &op_cfg_list = ServerConfig::Instance().GetOperateList();
+  for (ServerCfgOperate o_cfg : op_cfg_list)
   {
     Protocol::SCGOCommandOperateItem item;
-    item.operate_type = operate_type;
-    item.operate_name = o_item.show_name;
-    item.operate_describe = o_item.describe;
+    item.operate_type = o_cfg.type;
+    item.operate_name = o_cfg.name;
+    item.operate_describe = o_cfg.describe;
     ack.operate_list.push_back(item);
-
-    ++ operate_type;
   }
   NetworkAgent::GetInstance().SendSerialize(net_id, ack);
 
@@ -123,13 +89,15 @@ bool OperateManager::CommandUnlock(const std::string &cmd_str)
 void OperateManager::DoHandleCommand(face2wind::NetworkID net_id, int project_type, int operate_type)
 {
     //g_debug << "OperateManager::OnRequestCommand" << std::endl;
-  if (project_type >= (int)project_list_.size() || operate_type >= (int)operate_list_.size())
+  const ServerCfgProject *pro_cfg = ServerConfig::Instance().GetProjectCfg(project_type);
+  const ServerCfgOperate *opt_cfg = ServerConfig::Instance().GetOperateCfg(operate_type);
+  if (nullptr == pro_cfg || nullptr == opt_cfg)
   {
     g_debug  <<"project_type or operate_type invalid"<< std::endl;
     return;
   }
-
-  std::string cmd_str = std::string("dev_tool.sh ") + project_list_[project_type].cmd_name + " " + operate_list_[operate_type].cmd_name;
+  
+  std::string cmd_str = std::string("dev_tool.sh ") + pro_cfg->cmd + " " + opt_cfg->cmd;
   
   SCGORequestCommandAck ack;
   ack.project_type = project_type;

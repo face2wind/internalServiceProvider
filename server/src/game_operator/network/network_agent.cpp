@@ -2,8 +2,8 @@
 #include "game_operator_def.hpp"
 #include "protocol/internal_protocol_def.hpp"
 #include "commondef.hpp"
-#include <fstream>
-#include <iostream>
+//#include <iostream>
+#include "xml/serverconfig.hpp"
 
 using namespace face2wind;
 
@@ -25,25 +25,10 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::Running()
 {
-  std::ifstream file_project_list("center_server_addr.txt", std::ios::in);
-  bool read_file_succ = false;
-  if (file_project_list.is_open())
-  {
-    file_project_list >> center_server_ip_ >> center_server_port_ >> game_operator_listen_port_;
-    if (file_project_list.good()) // read error, set to default ip and port
-      read_file_succ = true;
-    else
-      g_debug<<"read center_server_addr.txt error "<<center_server_ip_ <<":"<<center_server_port_
-               <<", "<<game_operator_listen_port_<<std::endl;
-  }
-
-  if (!read_file_succ)
-  {
-      center_server_ip_ = "192.168.11.51";
-      center_server_port_ = 52023;
-      game_operator_listen_port_ = 52024;
-  }
-
+  center_server_ip_ = ServerConfig::Instance().GetCenterServerIp();
+  center_server_port_ = ServerConfig::Instance().GetCenterServerPort();
+  game_operator_listen_port_ = ServerConfig::Instance().GetGameServerPort();
+  
   net_mgr_.SyncConnect(center_server_ip_, center_server_port_);
   net_mgr_.SyncListen(game_operator_listen_port_);
   net_mgr_.WaitAllThread();

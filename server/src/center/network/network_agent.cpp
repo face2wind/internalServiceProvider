@@ -2,6 +2,7 @@
 #include "center_def.hpp"
 #include "services_manager.hpp"
 #include <iostream>
+#include "xml/serverconfig.hpp"
 
 using namespace face2wind;
 
@@ -23,7 +24,7 @@ NetworkAgent & NetworkAgent::GetInstance()
 
 void NetworkAgent::Listening()
 {
-  net_mgr_.SyncListen(52023);
+  net_mgr_.SyncListen(ServerConfig::Instance().GetCenterServerPort());
   net_mgr_.WaitAllThread();
 }
 

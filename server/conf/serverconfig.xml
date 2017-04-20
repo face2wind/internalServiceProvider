@@ -11,20 +11,50 @@
   <ProjectList>
     <Project type='0' cmd='tt_cn' name='天天大陆' />
     <Project type='1' cmd='tt_vn' name='天天越南' />
+
+    <Project type='2' cmd='ly_cn' name='灵域大陆' />
+    <Project type='3' cmd='ly_tw' name='灵域台湾' />
+    <Project type='4' cmd='ly_vn' name='灵域越南' />
+    <Project type='5' cmd='ly_kr' name='灵域韩国' />
+    <Project type='6' cmd='ly_sg' name='灵域新马' />
+    <Project type='7' cmd='ly_th' name='灵域泰国' />
+    <Project type='8' cmd='ly_en' name='灵域英文' />
+
+    <Project type='9' cmd='mg22_cn' name='s3风暴魔域' />
+
+    <Project type='10' cmd='mg23_cn' name='G17灵域天下' />
   </ProjectList>
-  
+
   <OperateList>
-    <Project type='0' cmd='update' name='更新' detail='更新配置并重启服务器'/>
-    <Project type='1' cmd='update' name='更新' detail='更新配置并重启服务器'/>
+    <Operate type='0' cmd='auto_devhot' name='小更新'          describe='热更开发服（不重启）'/>
+    <Operate type='1' cmd='start'       name='大更新'          describe='更新并重启开发服'/>
+    <Operate type='2' cmd='rebuild'     name='编译代码'        describe='更新并编译、重启开发服'/>
+    <Operate type='3' cmd='cleardb'     name='清数据'          describe='清理公共数据（比如随机活动开启时间）并更新配置重启'/>
+    <Operate type='4' cmd='hidden_db'   name='更跨服'          describe='同步并更新跨服服务器'/>
+
+    <Operate type='5' cmd='hot'         name='热更新'          describe='注意：这是热更到外服，会给旧的版本号！'/>
+    <Operate type='6' cmd='create'      name='发版本'          describe='注意：这是发版到外服，会给新的版本号！'/>
   </OperateList>
   
   <UserProjectList>
-    <ListItem list_type='1'>
+    <ListItem list_type='1' list_name='tt'>
       <ProjectType>0</ProjectType>
       <ProjectType>1</ProjectType>
     </ListItem>
-    <ListItem list_type='2'>
+    <ListItem list_type='2' list_name='ly'>
       <ProjectType>2</ProjectType>
+      <ProjectType>3</ProjectType>
+      <ProjectType>4</ProjectType>
+      <ProjectType>5</ProjectType>
+      <ProjectType>6</ProjectType>
+      <ProjectType>7</ProjectType>
+      <ProjectType>8</ProjectType>
+    </ListItem>
+    <ListItem list_type='3' list_name='fbmy'>
+      <ProjectType>9</ProjectType>
+    </ListItem>
+    <ListItem list_type='4' list_name='lytx'>
+      <ProjectType>10</ProjectType>
     </ListItem>
   </UserProjectList>
   

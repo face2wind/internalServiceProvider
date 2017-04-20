@@ -20,7 +20,7 @@ struct ServerCfgOperate
   int type;
   std::string name;
   std::string cmd;
-  std::string detail;
+  std::string describe;
 };
 
 class ServerConfig
@@ -29,6 +29,14 @@ class ServerConfig
   static ServerConfig & Instance();
 
   bool LoadXml(const std::string &xml_path);
+
+  std::string GetCenterServerIp() { return center_server_ip_; }
+  unsigned int GetCenterServerPort() { return center_server_port_; }
+  unsigned int GetGameServerPort() { return game_server_port_; }
+  const std::vector<ServerCfgOperate> & GetOperateList() { return operate_list_; }
+  const ServerCfgProject * GetProjectCfg(int pro_type);
+  const ServerCfgOperate * GetOperateCfg(int opt_type);
+  const std::vector<int> * GetUserProjectList(int project_type);
 
  protected:
   ServerConfig() {}
