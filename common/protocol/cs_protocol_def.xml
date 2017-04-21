@@ -10,6 +10,7 @@
   </protocol>
 
   <protocol name='CSGORequestCommandList'>
+    <attr name='project_list_type' type='int8'/>
   </protocol>
 
   <protocol name='SCGOCommandProjectItem'>

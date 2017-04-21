@@ -24,11 +24,11 @@ OperateManager::~OperateManager()
   thread_pool_.Stop();
 }
 
-void OperateManager::OnRequestCommandList(face2wind::NetworkID net_id)
+void OperateManager::OnRequestCommandList(face2wind::NetworkID net_id, int project_list_type)
 {
   SCGORequestCommandListACK ack;
 
-  const std::vector<int> *p_list = ServerConfig::Instance().GetUserProjectList(1);
+  const std::vector<int> *p_list = ServerConfig::Instance().GetUserProjectList(project_list_type);
   if (nullptr == p_list)
     return;
 

@@ -34,7 +34,8 @@ void MessageHandler::OnRecv(face2wind::NetworkID net_id, const face2wind::Serial
 
 void MessageHandler::OnRequestCommandList(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)
 {
-  op_mgr->OnRequestCommandList(net_id);
+  CSGORequestCommandList *cmd = (CSGORequestCommandList*)data;
+  op_mgr->OnRequestCommandList(net_id, cmd->project_list_type);
 }
 
 void MessageHandler::OnRequestCommand(face2wind::NetworkID net_id, const face2wind::SerializeBase *data)

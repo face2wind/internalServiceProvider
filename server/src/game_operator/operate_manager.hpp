@@ -35,7 +35,7 @@ class OperateManager
 
   friend class HandleCommandThreadTask;
   
-  void OnRequestCommandList(face2wind::NetworkID net_id);
+  void OnRequestCommandList(face2wind::NetworkID net_id, int project_list_type);
   void OnRequestCommand(face2wind::NetworkID net_id, int project_type, int operate_type);
 
  protected:

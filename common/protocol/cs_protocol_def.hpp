@@ -35,6 +35,7 @@ public:
 class CSGORequestCommandList : public SerializeBase
 {
 public:
+  char project_list_type;
 
   virtual void Serialize(ByteArray &collector) const;
   virtual void Unserialize(ByteArray &collector);

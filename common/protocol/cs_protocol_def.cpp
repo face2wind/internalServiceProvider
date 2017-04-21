@@ -39,10 +39,12 @@ void SCCheckServiceInfoAck::Unserialize(ByteArray &collector)
 
 void CSGORequestCommandList::Serialize(ByteArray &collector) const
 {
+  collector.WriteInt8(project_list_type);
 }
 
 void CSGORequestCommandList::Unserialize(ByteArray &collector)
 {
+  project_list_type = collector.ReadInt8();
 }
 
 void SCGOCommandProjectItem::Serialize(ByteArray &collector) const
