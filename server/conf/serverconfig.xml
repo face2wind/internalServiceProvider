@@ -6,6 +6,7 @@
   
   <GameServer>
     <Port>52014</Port>
+    <ServiceType>0</ServiceType>
   </GameServer>
   
   <ProjectList>
@@ -37,6 +38,19 @@
   </OperateList>
   
   <UserProjectList>
+    <ListItem list_type='0' list_name='super_user'>
+      <ProjectType>0</ProjectType>
+      <ProjectType>1</ProjectType>
+      <ProjectType>2</ProjectType>
+      <ProjectType>3</ProjectType>
+      <ProjectType>4</ProjectType>
+      <ProjectType>5</ProjectType>
+      <ProjectType>6</ProjectType>
+      <ProjectType>7</ProjectType>
+      <ProjectType>8</ProjectType>
+      <ProjectType>9</ProjectType>
+      <ProjectType>10</ProjectType>
+    </ListItem>
     <ListItem list_type='1' list_name='tt'>
       <ProjectType>0</ProjectType>
       <ProjectType>1</ProjectType>

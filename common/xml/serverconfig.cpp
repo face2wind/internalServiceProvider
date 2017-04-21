@@ -36,6 +36,7 @@ bool ServerConfig::LoadXml(const std::string &xml_path)
   center_server_ip_ = root_element->FirstChildElement("CenterServer")->FirstChildElement("IpAddr")->GetText();
   center_server_port_ = root_element->FirstChildElement("CenterServer")->FirstChildElement("Port")->IntText();
   game_server_port_ = root_element->FirstChildElement("GameServer")->FirstChildElement("Port")->IntText(0);
+  game_server_service_type_ = root_element->FirstChildElement("GameServer")->FirstChildElement("ServiceType")->IntText(0);
 
   XMLElement *project_element = root_element->FirstChildElement("ProjectList")->FirstChildElement("Project");
   while (nullptr != project_element)

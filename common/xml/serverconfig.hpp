@@ -33,6 +33,7 @@ class ServerConfig
   std::string GetCenterServerIp() { return center_server_ip_; }
   unsigned int GetCenterServerPort() { return center_server_port_; }
   unsigned int GetGameServerPort() { return game_server_port_; }
+  int GetGameServerServiceType() { return game_server_service_type_; }
   const std::vector<ServerCfgOperate> & GetOperateList() { return operate_list_; }
   const ServerCfgProject * GetProjectCfg(int pro_type);
   const ServerCfgOperate * GetOperateCfg(int opt_type);
@@ -46,6 +47,7 @@ class ServerConfig
   std::string center_server_ip_;
   int center_server_port_;
   int game_server_port_;
+  int game_server_service_type_;
 
   std::vector<ServerCfgProject> project_list_;
   std::vector<ServerCfgOperate> operate_list_;

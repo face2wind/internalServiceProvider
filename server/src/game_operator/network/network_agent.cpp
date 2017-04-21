@@ -65,7 +65,7 @@ void NetworkAgent::OnConnect(face2wind::IPAddr ip, face2wind::Port port, face2wi
       g_debug<<"connect to center server success!"<<std::endl;
       Protocol::RegisterService msg;
       msg.internal_key = "haha_is_me";
-      msg.service_type = ServiceType_GAME_OPERATOR;
+      msg.service_type = ServerConfig::Instance().GetGameServerServiceType();//ServiceType_GAME_OPERATOR;
       msg.server_port = game_operator_listen_port_;
       msg.allow_multiple = 0;
       this->SendSerialize(net_id, msg);
