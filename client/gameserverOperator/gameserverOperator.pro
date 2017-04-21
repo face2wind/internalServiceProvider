@@ -22,7 +22,7 @@ SOURCES += main.cpp\
     memory/serialize/serialize_base.cpp \
     memory/serialize/serialize_manager.cpp \
     ui/mainwindow.cpp \
-    ../../common/cs_protocol_def.cpp
+    ../../common/protocol/cs_protocol_def.cpp
 
 HEADERS  += \
     ui/ui_manager.hpp \
@@ -35,7 +35,7 @@ HEADERS  += \
     memory/serialize/serialize_manager.hpp \
     ../../common/message_code.hpp \
     ui/mainwindow.h \
-    ../../common/cs_protocol_def.hpp \
+    ../../common/protocol/cs_protocol_def.hpp \
     ../../common/commondef.hpp \
     client_def.hpp
 

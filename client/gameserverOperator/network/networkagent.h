@@ -25,6 +25,8 @@ private:
 
     IPAddr center_server_ip_;
     Port center_server_port_;
+    int service_type_;
+    int project_list_type_;
 
     MessageHandler msg_handler_;
 

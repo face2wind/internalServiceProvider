@@ -133,7 +133,7 @@ void MainWindow::OperateSucc()
         for (QString update_type : cur_hot_update_type_set_)
         {
             tip_str += update_type;
-            tip_str += ",";
+            tip_str += "，";
         }
         tip_str += "服务端版本号：";
         tip_str += cur_version_str_;

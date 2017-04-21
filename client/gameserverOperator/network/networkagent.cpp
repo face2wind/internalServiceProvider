@@ -1,32 +1,28 @@
 #include "networkagent.h"
 #include "ui/ui_manager.hpp"
-#include "cs_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
 #include "commondef.hpp"
 #include "ui/mainwindow.h"
 #include <QFile>
 #include "client_def.hpp"
 
-NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_(""), center_server_port_(0)
+NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_("127.0.0.1"), center_server_port_(52013), service_type_(ServiceType_GAME_OPERATOR), project_list_type_(0)
 {
     net_mgr_.RegistSerializeHandler(this);
 
     QFile file_project_list("center_server_addr.txt");
-    bool read_file_succ = false;
-
     if (file_project_list.open(QFile::ReadOnly))
     {
         QTextStream in(&file_project_list);
         QString ip_str;
         int port;
-        in >> ip_str >> port;
+        int service_type;
+        int project_list_type;
+        in >> ip_str >> port >> service_type >> project_list_type;
         center_server_ip_ = ip_str;
         center_server_port_ = port;
-        read_file_succ = true;
-    }
-    if (!read_file_succ)
-    {
-        center_server_ip_ = "192.168.11.199";
-        center_server_port_ = 52023;
+        service_type_ = service_type;
+        project_list_type_ = project_list_type;
     }
 
     this->ConnectToServer(center_server_ip_, center_server_port_);
@@ -48,7 +44,7 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
         UIManager::GetInstance().GetMainView()->SetTipsTxt("连接中央服务器成功，查询操作服务器IP端口！");
 
         Protocol::CSCheckServiceInfo check_info;
-        check_info.service_type = ServiceType_GAME_OPERATOR;
+        check_info.service_type = service_type_;
         this->SendToServer(check_info);
     }
     else
@@ -57,6 +53,7 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
         UIManager::GetInstance().GetMainView()->SetUIEnable(true);
 
         Protocol::CSGORequestCommandList req_command_list;
+        req_command_list.project_list_type = project_list_type_;
         this->SendToServer(req_command_list);
     }
 }

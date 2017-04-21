@@ -1,5 +1,5 @@
 #include "msg_handler.h"
-#include "cs_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
 #include "ui/ui_manager.hpp"
 #include "networkagent.h"
 #include <QtCore>

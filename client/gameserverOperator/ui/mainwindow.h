@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <deque>
 #include <set>
-#include "cs_protocol_def.hpp"
+#include "protocol/cs_protocol_def.hpp"
 
 namespace Ui {
 class ChatWindow;
