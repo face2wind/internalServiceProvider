@@ -1,10 +1,12 @@
 #include "serialize_manager.hpp"
-#include "memory/byte_array/queue_byte_array.hpp"
+#include "elegance/memory/byte_array/queue_byte_array.hpp"
+#include "elegance/network/network_manager.hpp"
+
 #include <cstring>
 
 namespace face2wind {
 
-void SerializeNetworkManager::SendSerialize(const SerializeBase &data)
+void SerializeNetworkManager::SendSerialize(NetworkID net_id, const SerializeBase &data)
 {
   QueueByteArray by;
 
@@ -16,7 +18,7 @@ void SerializeNetworkManager::SendSerialize(const SerializeBase &data)
   if (nullptr == char_data)
     return;
   
-  NetworkManager::Send(char_data, len);
+  NetworkManager::Send(net_id, char_data, len);
   delete []char_data;
 }
 
@@ -32,9 +34,9 @@ void SerializeNetworkManager::UnregistSerializeHandler(ISerializeNetworkHandler 
   serialize_handler_list_.erase(handler);
 }
 
-void SerializeNetworkManager::OnRecvPackage(char *data, int length)
+void SerializeNetworkManager::OnRecvPackage(NetworkID net_id, char *data, int length)
 {
-  NetworkManager::OnRecvPackage(data, length);
+  NetworkManager::OnRecvPackage(net_id, data, length);
 
   static char serialize_name[SERIALIZE_CLASS_NAME_MAX_LEN];
   short *s_name_len = (short*)data;
@@ -57,7 +59,7 @@ void SerializeNetworkManager::OnRecvPackage(char *data, int length)
   serialize_data->Unserialize(by);
   
   for (auto handler_ptr : serialize_handler_list_)
-    handler_ptr->OnRecv(serialize_data);
+    handler_ptr->OnRecv(net_id, serialize_data);
 
   delete serialize_data;
 }

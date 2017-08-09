@@ -1,9 +1,10 @@
 #ifndef NETWORKAGENT_H
 #define NETWORKAGENT_H
 
-#include "memory/serialize/serialize_manager.hpp"
+#include "elegance/memory/serialize/serialize_manager.hpp"
 #include "msg_handler.h"
-#include "client_def.hpp"
+
+using namespace face2wind;
 
 class NetworkAgent : public face2wind::ISerializeNetworkHandler
 {
@@ -11,15 +12,20 @@ public:
     NetworkAgent();
     static NetworkAgent & GetInstance();
 
-    virtual void OnConnect(IPAddr ip, Port port, Port local_port, bool success);
-    virtual void OnRecv(const face2wind::SerializeBase *data);
-    virtual void OnDisconnect();
+    virtual void OnListenFail(Port port) {}
+    virtual void OnAccept(IPAddr ip, Port port, Port local_port, NetworkID net_id) {}
+
+    virtual void OnConnect(IPAddr ip, Port port, Port local_port, bool success, NetworkID net_id);
+    virtual void OnRecv(NetworkID net_id, const face2wind::SerializeBase *data);
+    virtual void OnDisconnect(NetworkID net_id);
 
     void ConnectToServer(IPAddr ip, Port port);
     void Disconnect();
     void SendToServer(const face2wind::SerializeBase &data);
 
 private:
+    NetworkID server_netid_;
+
     IPAddr server_ip_;
     Port server_port_;
 

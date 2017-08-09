@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <map>
-#include <memory/serialize/serialize_base.hpp>
+#include <elegance/memory/serialize/serialize_base.hpp>
 
 class MessageHandler;
 typedef void (MessageHandler::*MessageHandlerFunc)(const face2wind::SerializeBase *data);

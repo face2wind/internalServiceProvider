@@ -4,7 +4,6 @@
 #include "commondef.hpp"
 #include "ui/mainwindow.h"
 #include <QFile>
-#include "client_def.hpp"
 
 NetworkAgent::NetworkAgent() : server_ip_(""), server_port_(0), center_server_ip_("127.0.0.1"), center_server_port_(52013), service_type_(ServiceType_GAME_OPERATOR), project_list_type_(0)
 {
@@ -34,10 +33,16 @@ NetworkAgent & NetworkAgent::GetInstance()
     return instance;
 }
 
-void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success)
+void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success, NetworkID net_id)
 {
+    if (!success)
+    {
+        return;
+    }
+
     server_ip_ = ip;
     server_port_ = port;
+    server_netid_ = net_id;
 
     if (ip == center_server_ip_ && port == center_server_port_)
     {
@@ -58,12 +63,12 @@ void NetworkAgent::OnConnect(IPAddr ip, Port port, Port local_port, bool success
     }
 }
 
-void NetworkAgent::OnRecv(const face2wind::SerializeBase *data)
+void NetworkAgent::OnRecv(NetworkID net_id, const face2wind::SerializeBase *data)
 {
     msg_handler_.OnRecv(data);
 }
 
-void NetworkAgent::OnDisconnect()
+void NetworkAgent::OnDisconnect(NetworkID net_id)
 {
     UIManager::GetInstance().GetMainView()->SetUIEnable(false);
 
@@ -75,7 +80,8 @@ void NetworkAgent::OnDisconnect()
 
     UIManager::GetInstance().GetMainView()->SetTipsTxt("与操作服务器断开，正在重连。。。。。。");
 
-    net_mgr_.DelayReconnect();
+    server_netid_ = 0;
+    //net_mgr_.DelayReconnect();
 }
 
 void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
@@ -85,10 +91,10 @@ void NetworkAgent::ConnectToServer(IPAddr ip, Port port)
 
 void NetworkAgent::Disconnect()
 {
-    net_mgr_.Disconnect();
+    net_mgr_.Disconnect(server_netid_);
 }
 
 void NetworkAgent::SendToServer(const face2wind::SerializeBase &data)
 {
-    net_mgr_.SendSerialize(data);
+    net_mgr_.SendSerialize(server_netid_, data);
 }
