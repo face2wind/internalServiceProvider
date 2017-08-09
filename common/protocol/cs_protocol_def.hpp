@@ -2,7 +2,7 @@
 
 #include <string>
 #include <vector>
-#include <memory/serialize/serialize_base.hpp>
+#include <elegance/memory/serialize/serialize_base.hpp>
 
 using face2wind::SerializeBase;
 using face2wind::SerializeDescribe;

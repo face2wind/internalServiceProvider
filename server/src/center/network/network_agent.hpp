@@ -2,8 +2,7 @@
 
 #include "message_handler.hpp"
 
-#include <memory/serialize/serialize_manager.hpp>
-#include <elegance.hpp>
+#include <elegance/elegance.hpp>
 
 class NetworkAgent : public face2wind::ISerializeNetworkHandler
 {

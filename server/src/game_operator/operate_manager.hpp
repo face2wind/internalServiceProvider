@@ -3,9 +3,9 @@
 #include <vector>
 #include <set>
 
-#include <platform/network/socket_def.hpp>
-#include <platform/thread/mutex.hpp>
-#include <platform/thread/thread_pool.hpp>
+#include <elegance/platform/network/socket_def.hpp>
+#include <elegance/platform/thread/mutex.hpp>
+#include <elegance/platform/thread/thread_pool.hpp>
 #include "protocol/cs_protocol_def.hpp"
 
 class OperateManager;

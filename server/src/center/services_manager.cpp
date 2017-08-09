@@ -17,7 +17,7 @@ void ServicesManager::OnUpdateServiceInfo(face2wind::NetworkID net_id, int servi
 
 void ServicesManager::OnCheckServiceInfo(face2wind::NetworkID net_id, int service_type)
 {
-  c_debug <<"on chesk service info"<<std::endl;
+  c_debug <<"on chesk service info, net_id("<<net_id<<"), service_type("<<service_type<<")"<<std::endl;
   Protocol::SCCheckServiceInfoAck ack;
   ack.service_type = service_type;
   ack.ip_addr = "";

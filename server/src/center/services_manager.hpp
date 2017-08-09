@@ -1,6 +1,6 @@
 #pragma once
 
-#include <elegance.hpp>
+#include <elegance/elegance.hpp>
 
 struct ServiceItem
 {
